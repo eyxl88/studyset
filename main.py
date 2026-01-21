@@ -3,9 +3,11 @@ from typing import Any
 from libs.chronological import chronological
 from libs.questions import multiple_choice, multiple_choice_flipped, flashcard
 
-#Flashcards
-#Enter key terms and definitions:
+# Check files files inside ./libs folder for all the code that was once here.
+# If you need help finding everything, let me know!
+# - Asley
 
+# Global variables
 NEWEST_DICT: dict[Any, Any] = {}
 ACCEPTED_USER_INPUTS: list[str] = ['q', 'c', 's', 'r', 'mcqdef', 
                         'mcqkey', 'selectall', 'selectall', 
