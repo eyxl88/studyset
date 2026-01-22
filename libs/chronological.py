@@ -1,4 +1,5 @@
-import random, utils
+import random
+import libs.utils as utils
 
 # All chronological type of question logic found here.
 

@@ -1,6 +1,6 @@
 import os, platform, csv, random
-import chronological as chrono
-import check_question as check
+import libs.chronological as chrono
+import libs.check_question as check
 
 # Bunch of helper functions and stuff I couldn't find the place to actually
 # sort them into. Very messy, I know :)

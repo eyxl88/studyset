@@ -1,4 +1,5 @@
-import random, utils
+import random
+import libs.utils as utils
 
 # All quizzes, flashcard logic found in here.
 
