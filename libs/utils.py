@@ -102,23 +102,23 @@ def read_data_from_csv():
     return dict_read_from_csv
 
 # ==================================== Process ====================================
+def process_text(string):
+    """Process string by removing empty spaces between words and lower-casing all letters."""
+    list_of_words = string.split()
+    final_string = ""
+    
+    # Add lowercased versions of non-empty entries to final string.
+    for word in list_of_words:
+        if word:
+            word = word.lower()
+            final_string += word
+    
+    return final_string
 
-def process_text(user_answer):
-    """Returns lowercased, spaceless string containing only letters without numbers \
-        or punctuation."""
-    user_answer = user_answer.strip().lower()
-    user_answer_list = user_answer.split("")
-    
-    user_answer_processed = ""
-    
-    for letter in user_answer:
-        if letter.isalnum() and not (letter.isdigit()):
-            user_answer_processed += letter
-    
-    return user_answer_processed
 
 def process_match_input(user_answer, study_dict):
     user_answer_list = user_answer.split(",")
+    
     for i in range(len(user_answer_list)):
         try:
             user_answer_list[i] = [int(user_answer_list[i][0]), user_answer_list[i][1].upper()]
@@ -148,9 +148,34 @@ def print_from_options_dict(options_dict):
     for key in options_dict:
         print(f"{key}: {"\n".join(options_dict[key])}")
 
-def print_select_all(options_dict):
+def print_select_all(options_dict: dict[int, str]):
+    """
+    Docstring for print_select_all
+    
+    Parameters:
+        options_dict (dict[int, str]): dictionary with numbers (keys) corresponding to definitions (values) 
+    
+    Returns None.
+
+    """
     for key in options_dict:
         print(f"{key}: {options_dict[key]}")
+
+def print_comma_separated_values(list_to_print):
+    """
+    Prints the items in a list with commas and spaces separating them, other than last item.
+    
+    Parameters:
+        list_to_print (list[str]): list containing string items to be printed separated.
+
+    Returns None.
+
+    """
+    for i in range(len(list_to_print)):
+        if i == len - 1:
+            print(list_to_print[i])
+        else:
+            print(f"{list_to_print[i]}, ")
 
 # ==================================== Select ====================================
 
@@ -201,7 +226,7 @@ def print_menu():
     print("Press 'm' to be quizzed by matching key terms to definitions.")
     print("Press 'fc' for flashcard mode of studying.")
     print("Press 'chr' to be quizzed with ordering questions on key terms.")
-    print("Press 'q' to quit.")
+    print("Press 'exit' to quit.")
 
 # ==================================== Other/Misc ====================================
 
@@ -216,7 +241,7 @@ def write_data(study_dict):
         print()
         key_term = random.choice(list_of_keys)
         list_of_keys.remove(key_term)
-        answer = study_dict[key_term]
+        answer = key_term
 
         print("Question", i + 1, end=" ")
 
@@ -240,16 +265,22 @@ def enter_data():
     print("Data Entry: Enter key terms and definitions as prompted.\nEnter 'done' to quit.")
     entry_dict = {}
     key = input("Input key term: ")
+    
     while key != 'done':
         definition_list = [] 
         def_input = ""
+
         while True:
             def_input = input("Input definition(s) of key term or 'f' to finish this term: ")
+
             if def_input == "f":
                 break
+
             definition_list.append(def_input)
+
         entry_dict[key] = definition_list
         key = input("Input key term: ")
+
     return entry_dict
 
 def get_dict_key(dictionary, value):

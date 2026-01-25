@@ -9,9 +9,18 @@ from libs.questions import multiple_choice, multiple_choice_flipped, flashcard
 
 # Global Constants
 NEWEST_DICT: dict[Any, Any] = {}
-ACCEPTED_USER_INPUTS: list[str] = ['q', 'c', 's', 'r', 'mcqdef', 
+ACCEPTED_USER_INPUTS: list[str] = ['exit', 'c', 's', 'r', 'mcqdef', 
                         'mcqkey', 'selectall', 'selectall', 
                         'w', 'm', 'fc', 'chr']
+
+def check_file_loaded(is_file_loaded, error_msg="File not loaded. You must load a file first."):
+    """Checks if file is loaded and prints error message otherwise."""
+    if is_file_loaded != True:
+        print(error_msg)
+        input("Press any key to continue...")
+
+    return is_file_loaded
+
 
 # Main program loop
 def main():
@@ -23,38 +32,43 @@ def main():
     utils.clear_console()
     utils.print_menu()
 
+    is_file_loaded = False
+
     user_input = input()
-    while user_input != 'q':
+    while user_input != 'exit':
         if user_input in ACCEPTED_USER_INPUTS:
 
             if user_input == 'c':
                 NEWEST_DICT = utils.enter_data()
+                is_file_loaded = True
 
-            elif user_input == 's':
+            elif user_input == 's' and check_file_loaded(is_file_loaded):
                 utils.save_data_to_csv(NEWEST_DICT)
 
             elif user_input == 'r':
                 NEWEST_DICT = utils.read_data_from_csv()
+                if len(NEWEST_DICT) != 0:
+                    is_file_loaded = True
 
-            elif user_input == 'mcqdef':
+            elif user_input == 'mcqdef' and check_file_loaded(is_file_loaded):
                 multiple_choice(NEWEST_DICT)
 
-            elif user_input == 'mcqkey':
+            elif user_input == 'mcqkey' and check_file_loaded(is_file_loaded):
                 multiple_choice_flipped(NEWEST_DICT)
 
-            elif user_input == "selectall":
+            elif user_input == "selectall" and check_file_loaded(is_file_loaded):
                 utils.select_all(NEWEST_DICT)
 
-            elif user_input == "w":
+            elif user_input == "w" and check_file_loaded(is_file_loaded):
                 utils.write_data(NEWEST_DICT)
 
-            elif user_input == "m":
+            elif user_input == "m" and check_file_loaded(is_file_loaded):
                 utils.match_answers(NEWEST_DICT)
 
-            elif user_input == "fc":
+            elif user_input == "fc" and check_file_loaded(is_file_loaded):
                 flashcard(NEWEST_DICT)
 
-            elif user_input == "chr":
+            elif user_input == "chr" and check_file_loaded(is_file_loaded):
                 chronological(NEWEST_DICT)
         
         else:
