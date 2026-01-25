@@ -2,6 +2,7 @@ from typing import Any
 import libs.utils as utils
 from libs.chronological import chronological
 from libs.questions import multiple_choice, multiple_choice_flipped, flashcard
+from libs.utils import check_file_loaded
 
 # Check files files inside ./libs folder for all the code that was once here.
 # If you need help finding everything, let me know!
@@ -12,15 +13,6 @@ NEWEST_DICT: dict[Any, Any] = {}
 ACCEPTED_USER_INPUTS: list[str] = ['exit', 'c', 's', 'r', 'mcqdef', 
                         'mcqkey', 'selectall', 'selectall', 
                         'w', 'm', 'fc', 'chr']
-
-def check_file_loaded(is_file_loaded, error_msg="File not loaded. You must load a file first."):
-    """Checks if file is loaded and prints error message otherwise."""
-    if is_file_loaded != True:
-        print(error_msg)
-        input("Press any key to continue...")
-
-    return is_file_loaded
-
 
 # Main program loop
 def main():

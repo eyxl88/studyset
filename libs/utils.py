@@ -89,16 +89,20 @@ def read_data_from_csv():
     try:
         with open(csv_to_read, "r") as csv_to_read:
             csv_reader = csv.reader(csv_to_read, delimiter=",")
+            
             for row in csv_reader:
                 if not row:
                     continue
+                
                 else:
                     key = row[0]
                     definition = row[1:]
                     dict_read_from_csv[key] = definition
+
     except:
         print("File not found. Try again by pressing 'r' after the main menu prints. \
               Use a valid file name.")
+        
     return dict_read_from_csv
 
 # ==================================== Process ====================================
@@ -117,10 +121,13 @@ def process_text(string):
 
 
 def process_match_input(user_answer, study_dict):
+    """Turns match string input into a list of lists in the form list[list[int, str]]."""
     user_answer_list = user_answer.split(",")
-    
+
     for i in range(len(user_answer_list)):
         try:
+            # Turns the first character of each list item into an int and the second character
+            # into an upper case letter, then replaces the item with this list.
             user_answer_list[i] = [int(user_answer_list[i][0]), user_answer_list[i][1].upper()]
 
         except:
@@ -139,6 +146,7 @@ def print_keys(study_dict):
         print(key)
 
 def print_words_from_options_dict(options_dict):
+    """Prints each key and one-line phrase definition from a given dictionary."""
     for key in options_dict:
         print(f"{key}: {options_dict[key]}")
 
@@ -150,7 +158,7 @@ def print_from_options_dict(options_dict):
 
 def print_select_all(options_dict: dict[int, str]):
     """
-    Docstring for print_select_all
+    Prints select all options.
     
     Parameters:
         options_dict (dict[int, str]): dictionary with numbers (keys) corresponding to definitions (values) 
@@ -180,12 +188,17 @@ def print_comma_separated_values(list_to_print):
 # ==================================== Select ====================================
 
 def select_all(study_dict):
+    """Generates select all questions with definitions as answers for each key term in a studyset."""
+    TOTAL = len(study_dict)
+    user_correct = 0
     list_of_keys = list(study_dict.keys())
 
     for i in range(len(study_dict)):
+        # Selects key term and prints question header.
         key_term = random.choice(list_of_keys)
         print("Question", i + 1, key_term)
 
+        # Removes key term from list, finds answer, creates and prints options.
         list_of_keys.remove(key_term)
         answer = study_dict[key_term]
         options_dict = create_select_all(answer, study_dict.values())
@@ -194,10 +207,17 @@ def select_all(study_dict):
         user_answer = input("Which of the following are correct? Enter a list \
                             of comma-separated numbers (ie. 1,3,7): ")
         
+        # Allows user to return to main menu.
         if user_answer == "q":
-            return 0
+            return None
         
-        check.check_select_all_answer(user_answer, answer, options_dict)
+        user_correct += check.check_select_all_answer(user_answer, answer, options_dict)
+    
+    # Print and save user score.
+    user_score = user_correct / TOTAL
+    print(f"Your score is {user_correct} / {TOTAL} and your accuracy is {user_score * 100:.2f}%.")
+    # Implement save_score(user_score, "select all")
+
 
 # =================== Program Specific Functions ===================
 
@@ -287,3 +307,11 @@ def get_dict_key(dictionary, value):
     for key in dictionary:
         if dictionary[key] == value:
             return key
+
+def check_file_loaded(is_file_loaded, error_msg="File not loaded. You must load a file first."):
+    """Checks if file is loaded and prints error message otherwise."""
+    if is_file_loaded != True:
+        print(error_msg)
+        input("Press any key to continue...")
+
+    return is_file_loaded
