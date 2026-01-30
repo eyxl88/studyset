@@ -1,5 +1,6 @@
 import random
 import libs.utils as utils
+import libs.check_question as check
 
 # All quizzes, flashcard logic found in here.
 
@@ -40,7 +41,7 @@ def create_options(answer: str, option_view_object):
     return options_dict
 
 
-def multiple_choice(study_dict: dict[str, list[str]]):
+def multiple_choice(study_dict: dict[str, list[str]], study_set_name):
     """
     Creates multiple choice questions for each term in the study set and saves user score.
     
@@ -73,7 +74,7 @@ def multiple_choice(study_dict: dict[str, list[str]]):
         if user_answer == "q":
             return None
         
-        output = utils.check_answer(user_answer, answer, options_dict)
+        output = check.check_answer(user_answer, answer, options_dict)
         user_correct += output
     
     print()
@@ -82,15 +83,16 @@ def multiple_choice(study_dict: dict[str, list[str]]):
     user_score = user_correct / TOTAL_POINTS
     print(f"Your score is {user_correct} / {TOTAL_POINTS} and your accuracy is {user_score * 100:.2f}%.")
     
-    # Implement save_score()
-        
+    # UPDATE ME: once study_set_name tracking is implemented.
+    utils.ask_to_save_score(study_set_name, "mcqdef", user_score)
 
-def multiple_choice_flipped(study_dict: dict[str, list[str]]):
+def multiple_choice_flipped(study_dict: dict[str, list[str]], study_set_name):
     """Generates multiple choice questions with the key term as the answer for
     a given study set, going through all key terms.
     
     Parameters:
         study_dict (dict[str, list[str]]): dictionary with key terms as keys and definitions as answers.
+        study_set_name (str): string containing name of current study set.
 
     Returns None.
 
@@ -131,9 +133,9 @@ def multiple_choice_flipped(study_dict: dict[str, list[str]]):
         user_correct += question_score
 
     # Calculate, print, and save score.
-    user_score = user_correct / TOTAL_POINTS
-    print(f"\nYour score is {user_correct}/{TOTAL_POINTS} and your accuracy is {user_score * 100:.2f}%.")
-    # Implement save_score()
+    user_score = user_correct / TOTAL_POINTS * 100
+    print(f"\nYour score is {user_correct}/{TOTAL_POINTS} and your accuracy is {user_score:.2f}%.")
+    utils.ask_to_save_score(study_set_name, "mcqkey", user_score)
 
 
 def flashcard(study_dict: dict[str, list[str]]):

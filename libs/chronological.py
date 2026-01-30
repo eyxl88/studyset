@@ -79,7 +79,7 @@ def check_chron_answer(user_answer, answer):
         print()
         return 0
 
-def chronological(study_dict):
+def chronological(study_dict, study_set_name):
     """
     Manages the chronological question and saves user scores.
     
@@ -105,7 +105,7 @@ def chronological(study_dict):
     if user_answer == "q":
         return None
     
+    # Get correct answer, check, and save score.
     answer = get_chron_answer(options_dict, study_dict)
-    check_chron_answer(user_answer, answer)
-    
-    # Implement save_score()
+    user_score = check_chron_answer(user_answer, answer) * 100
+    utils.ask_to_save_score(study_set_name, "chron", user_score)

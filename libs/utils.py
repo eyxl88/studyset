@@ -1,6 +1,7 @@
 import os, platform, csv, random
 import libs.chronological as chrono
 import libs.check_question as check
+import datetime
 
 # Bunch of helper functions and stuff I couldn't find the place to actually
 # sort them into. Very messy, I know :)
@@ -44,7 +45,7 @@ def create_numeric_options(options_list):
 
 # ==================================== Match ====================================
 
-def match_answers(study_dict):
+def match_answers(study_dict, study_set_name):
     """Manages the matching terms quiz version of any given study set."""
     # Set up Question
     terms_list = list(study_dict.keys())
@@ -65,27 +66,53 @@ def match_answers(study_dict):
     if input == "q":
         return 0
 
-    check.check_match_answer(user_input, options_dict_numeric, options_dict, study_dict)
+    # Calculate, print, and save score.
+    user_score = check.check_match_answer(user_input, options_dict_numeric, 
+                                        options_dict, study_dict) * 100
+    print(f"You scored {user_score:.2f}%!")
+    ask_to_save_score(study_set_name, "match", user_score)
 
 # ==================================== CSV Specific ====================================
 
-def save_data_to_csv(entry_dict):
+def save_data_to_csv(entry_dict: dict[str, list[str]]):
+    """
+    Saves dictionary data to csv file containing key terms and definitions.
+    
+    Parameters:
+        entry_dict (dict[str, list[str]]): dictionary containing the study set to save.
+    
+    Returns:
+        study_set_name (str): string representing name of study set needed to save scores.
+    
+    """
     name = input("Enter name of csv file to save: ")
+    
+    # Save study set name to variable and prepare file name for reading.
     if not(name.endswith(".csv")):
+        study_set_name = name
         name += ".csv"
+    else:
+        study_set_name = name[:-4] # Remove .csv extension from name
+
     with open(name, "a+") as csv_file:
         csv_writer = csv.writer(csv_file)
-        import os
         print(os.path.abspath(name))
+        
+        # Write each row to the csv file.
         for key in entry_dict:
-            list_to_write = []
+            list_to_write = [] # Clear list_to_write.
             list_to_write = [key] + entry_dict[key]
             csv_writer.writerow(list_to_write)
+
+    input("Your file has been saved. Press any key to contine...")
+    return study_set_name
 
 def read_data_from_csv():
     """Takes csv file and reads csv file into test-ready dictionary."""
     csv_to_read = input("Input name of csv to read with extension: ")
+    study_set_name = csv_to_read[:-4] # Remove .csv extension
     dict_read_from_csv = {}
+    
     try:
         with open(csv_to_read, "r") as csv_to_read:
             csv_reader = csv.reader(csv_to_read, delimiter=",")
@@ -103,7 +130,7 @@ def read_data_from_csv():
         print("File not found. Try again by pressing 'r' after the main menu prints. \
               Use a valid file name.")
         
-    return dict_read_from_csv
+    return dict_read_from_csv, study_set_name
 
 # ==================================== Process ====================================
 def process_text(string):
@@ -248,11 +275,13 @@ def print_menu():
     print("Press 'chr' to be quizzed with ordering questions on key terms.")
     print("Press 'exit' to quit.")
 
-# ==================================== Other/Misc ====================================
+# ==================================== Write Mode ====================================
 
-def write_data(study_dict):
+def write_mode(study_dict, study_set_name):
     """Sets up the 'write' test mode and checks answers."""
     list_of_keys = list(study_dict.keys())
+    user_correct = 0
+    TOTAL_POINTS = len(study_dict)
     
     for i in range(len(study_dict)):
         
@@ -278,10 +307,17 @@ def write_data(study_dict):
         if user_answer == "q":
             return 0
         
-        check.check_written_answer(user_answer, answer)
+        user_correct += check.check_written_answer(user_answer, answer)
+    
+    # Calculate and save user score.
+    user_score = user_correct / TOTAL_POINTS * 100
+    print(f"You scored {user_score:.2f}%")
+    ask_to_save_score(study_set_name, "write", user_score)
 
+#=============================== Study Set Creation =======================================
 def enter_data():
     """Gets user to input study set and returns a dictionary."""
+    # Initializes data entry mode.
     print("Data Entry: Enter key terms and definitions as prompted.\nEnter 'done' to quit.")
     entry_dict = {}
     key = input("Input key term: ")
@@ -291,6 +327,7 @@ def enter_data():
         def_input = ""
 
         while True:
+            # Allows user to enter all related definitions for the key term.
             def_input = input("Input definition(s) of key term or 'f' to finish this term: ")
 
             if def_input == "f":
@@ -298,20 +335,152 @@ def enter_data():
 
             definition_list.append(def_input)
 
+        # Updates study set dictionary and allows user to enter next key term.
         entry_dict[key] = definition_list
         key = input("Input key term: ")
+    
+    # Gets user to name dictionary for score saving purposes.
+    study_set_name = input("Enter temporary name for study set: ")
+    
+    return entry_dict, study_set_name
 
-    return entry_dict
+# ================= Other / Misc. =======================================================
 
 def get_dict_key(dictionary, value):
     for key in dictionary:
         if dictionary[key] == value:
             return key
 
-def check_file_loaded(is_file_loaded, error_msg="File not loaded. You must load a file first."):
+def check_file_loaded(is_file_loaded, 
+                      error_msg="File not loaded. You must load a file first."):
     """Checks if file is loaded and prints error message otherwise."""
+    
     if is_file_loaded != True:
         print(error_msg)
         input("Press any key to continue...")
 
     return is_file_loaded
+
+# ==================================== Score Saving ====================================
+
+def ask_to_save_score(study_set_name, section, score):
+    """
+    Asks user if they would like to save score and calls save_score function.
+    
+    Parameters:
+        study_set_name (str): name of the study set currently loaded. 
+        section (str): name of the mode they are currently using. 
+        score (float): float as a percent out of 100 that is the score of the user.
+    
+    Returns None.
+
+    """
+    user_input = input("Press 'y' to save your score or any other key"\
+                       " to return to the main menu: ")
+    if user_input == "y":
+        save_score(study_set_name, section, score)
+
+def reformat_scores_list(list):
+    """
+    Processes a given list of scores and returns the rows and overall score.
+    
+    Parameters:
+        list (list[str]): list of strings read from a txt file.
+
+    Returns:
+        list_to_return (list[str]): each attempt and score of the user as a string.
+        overall_score (list): last line of the file; overall score of the user.
+    
+    """
+    list_to_return = []
+    
+    # Remove empty rows from list.
+    for row in list:
+        if row:
+            list_to_return.append(row)
+    
+    # Attempt to get the last item from the list and assign to overall_score.
+    try:
+        overall_score = list_to_return.pop()
+        return list_to_return, overall_score
+    
+    except:
+        overall_score = "FileNotWritten"
+    
+    return list_to_return, overall_score
+
+
+def create_score_attempt(time_string, score):
+    """Takes a string representing the time and a score, formatting an attempt string"""
+    string = time_string + " - You scored " + f"{score:.2f}%"
+    return string
+
+
+def create_overall_score(score):
+    """Takes a float score and returns a 1st attempt overall score string"""
+    string = f"Your overall score is {score:.2f}% after 1 attempt!"
+    return string
+
+
+def update_overall_score(list_of_history: list[str]):
+    """Takes a list of all scores to update the overall score string."""
+    past_score_list = []
+    
+    # Get float score percentage for all attempts and append to list.
+    for row in list_of_history:
+        if row:
+            temp_list = row.split(" - You scored ")
+            score = float(temp_list[1][:-1])
+            past_score_list.append(score)
+    
+    # Calculate average score and number of attempts from past_score_list.
+    avg_score = sum(past_score_list) / len(past_score_list)
+    num_attempts = len(past_score_list)
+
+    # Create a new updated overall score string and return.
+    string = f"Your overall score is {avg_score:.2f}% after {num_attempts} attempts!"
+    
+    return string
+
+    
+def save_score(study_set_name, section, score):
+    """
+    Saves user scores for a certain section of the studyset quizzes.
+    
+    Parameters:
+        study_set_name (str): string representing the studyset being studied.
+        section (str): string which describes the mode of studyset. 
+        score (float): unrounded floating-point score of the user for that attempt.
+    
+    Returns None.
+        
+    """
+    # Find current time to save score under.
+    now = datetime.now
+    now_formatted = now.strftime("%Y/%m/%d %H:%M")
+    
+    # Find / create filename for the scores file of this study mode.
+    section = study_set_name + "_" + section + "_scores.txt"
+
+    # In case the section file is created in a different local folder.
+    if os.path.exists(section):
+        section = os.path.find(section)
+    
+    # Create / open file and read contents to update (if any).
+    with open(section, "w+") as file:
+        list_of_contents = file.readlines()
+        rewrite_list, overall_score = reformat_scores_list(list_of_contents)
+        
+        # If the user score file for that section is empty:
+        if overall_score == "FileNotWritten":
+            file.write(create_score_attempt(now_formatted, score))
+            file.write(create_overall_score(score))
+        
+        # If the user score file has existing attempts on record:
+        else:
+            rewrite_list.append(create_score_attempt(now_formatted, score))
+            
+            for item in rewrite_list:
+                file.write(item)
+            
+            file.write(update_overall_score(rewrite_list))

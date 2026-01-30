@@ -25,43 +25,44 @@ def main():
     utils.print_menu()
 
     is_file_loaded = False
+    study_set_name = ""
 
     user_input = input()
     while user_input != 'exit':
         if user_input in ACCEPTED_USER_INPUTS:
 
             if user_input == 'c':
-                NEWEST_DICT = utils.enter_data()
+                NEWEST_DICT, study_set_name = utils.enter_data()
                 is_file_loaded = True
 
             elif user_input == 's' and check_file_loaded(is_file_loaded):
-                utils.save_data_to_csv(NEWEST_DICT)
+                study_set_name = utils.save_data_to_csv(NEWEST_DICT)
 
             elif user_input == 'r':
-                NEWEST_DICT = utils.read_data_from_csv()
+                NEWEST_DICT, study_set_name = utils.read_data_from_csv()
                 if len(NEWEST_DICT) != 0:
                     is_file_loaded = True
 
             elif user_input == 'mcqdef' and check_file_loaded(is_file_loaded):
-                multiple_choice(NEWEST_DICT)
+                multiple_choice(NEWEST_DICT, study_set_name)
 
             elif user_input == 'mcqkey' and check_file_loaded(is_file_loaded):
-                multiple_choice_flipped(NEWEST_DICT)
+                multiple_choice_flipped(NEWEST_DICT, study_set_name)
 
             elif user_input == "selectall" and check_file_loaded(is_file_loaded):
-                utils.select_all(NEWEST_DICT)
+                utils.select_all(NEWEST_DICT, study_set_name)
 
             elif user_input == "w" and check_file_loaded(is_file_loaded):
-                utils.write_data(NEWEST_DICT)
+                utils.write_mode(NEWEST_DICT, study_set_name)
 
             elif user_input == "m" and check_file_loaded(is_file_loaded):
-                utils.match_answers(NEWEST_DICT)
+                utils.match_answers(NEWEST_DICT, study_set_name)
 
             elif user_input == "fc" and check_file_loaded(is_file_loaded):
                 flashcard(NEWEST_DICT)
 
             elif user_input == "chr" and check_file_loaded(is_file_loaded):
-                chronological(NEWEST_DICT)
+                chronological(NEWEST_DICT, study_set_name)
         
         else:
             # User input is not valid.

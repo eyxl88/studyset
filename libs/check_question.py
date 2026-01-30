@@ -198,7 +198,7 @@ def check_match_answer(user_answer, options_dict_numeric, options_dict, study_di
         study_dict (dict[str, list[str]]): dictionary with key terms and definitions.
 
     Returns:
-        (0 | 1): depends on whether user_answer is correct (1) or incorrect (0).
+        user_score (int | float): depends on whether user_answer is correct (1) or incorrect.
 
     """
     TOTAL_POINTS = len(study_dict)
@@ -222,7 +222,7 @@ def check_match_answer(user_answer, options_dict_numeric, options_dict, study_di
     
     if matches_correct == TOTAL_POINTS:
         print("All correct! Good job.\n")
-        return 1
+        user_score = 1
     
     else:
         print(f"Incorrect, you scored {matches_correct} / {TOTAL_POINTS}.")
@@ -233,4 +233,6 @@ def check_match_answer(user_answer, options_dict_numeric, options_dict, study_di
             print(f"{matches_wrong[i]} should be {right_matches[i]}")
         
         print()
-        return 0
+        user_score = matches_correct / TOTAL_POINTS
+    
+    return user_score
