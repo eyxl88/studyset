@@ -68,22 +68,27 @@ def multiple_choice(study_dict: dict[str, list[str]], study_set_name):
 
         # Prints question and options.
         utils.print_from_options_dict(options_dict)
-        user_answer = input("What is the correct answer? Enter A, B, C, D, or E: ")
         
-        # Allows user to return to main menu.
-        if user_answer == "q":
-            return None
-        
-        output = check.check_answer(user_answer, answer, options_dict)
+        while True:
+            user_answer = input("What is the correct answer? Enter A, B, C, D, or E: ")
+            
+            # Allows user to return to main menu.
+            if user_answer == "q":
+                return None
+            
+            try:
+                output = check.check_answer(user_answer, answer, options_dict)
+                break
+
+            except:
+                print("Invalid input. Try again.")
+
         user_correct += output
-    
-    print()
+        print()
 
     # Print and save user score.
-    user_score = user_correct / TOTAL_POINTS
-    print(f"Your score is {user_correct} / {TOTAL_POINTS} and your accuracy is {user_score * 100:.2f}%.")
-    
-    # UPDATE ME: once study_set_name tracking is implemented.
+    user_score = user_correct / TOTAL_POINTS * 100
+    print(f"Your score is {user_correct} / {TOTAL_POINTS} and your accuracy is {user_score:.2f}%.")
     utils.ask_to_save_score(study_set_name, "mcqdef", user_score)
 
 def multiple_choice_flipped(study_dict: dict[str, list[str]], study_set_name):
@@ -98,7 +103,6 @@ def multiple_choice_flipped(study_dict: dict[str, list[str]], study_set_name):
 
     """
     # Convert all definitions in the study dictionary into a list of lists and initialize score vars.
-    global completion
     list_of_values = list(study_dict.values())
     TOTAL_POINTS = len(study_dict)
     user_correct = 0
@@ -118,18 +122,22 @@ def multiple_choice_flipped(study_dict: dict[str, list[str]], study_set_name):
         answer = utils.get_dict_key(study_dict, definition)
         options_dict = create_options(answer, study_dict.keys())
         utils.print_words_from_options_dict(options_dict)
-        completion = False
 
-        while completion != True:
+        while True:
             # Get and check user answer.
             user_answer = input("What is the correct answer? Enter A, B, C, D, or E: ")
-            
+                
             # Allow user to exit mcqkey mode by entering "q" at any time.
             if user_answer == "q":
                 return None
-            
-            question_score = utils.check_answer_one_phrase(user_answer, answer, options_dict)
+                
+            try:
+                question_score = utils.check_answer_one_phrase(user_answer, answer, options_dict)
+                break
 
+            except:
+                print("Invalid input. Try again.")
+        
         user_correct += question_score
 
     # Calculate, print, and save score.

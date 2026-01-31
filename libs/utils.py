@@ -214,8 +214,18 @@ def print_comma_separated_values(list_to_print):
 
 # ==================================== Select ====================================
 
-def select_all(study_dict):
-    """Generates select all questions with definitions as answers for each key term in a studyset."""
+def select_all(study_dict, study_set_name):
+    """Generates select all questions with definitions as answers for each key term 
+    in a studyset.
+    
+    Parameters:
+        study_dict (dict[str, list[str]]): study set with key terms and definitions
+        study_set_name (str): name of the study set for save_score purposes
+    
+    Returns:
+        None
+
+    """
     TOTAL = len(study_dict)
     user_correct = 0
     list_of_keys = list(study_dict.keys())
@@ -231,19 +241,27 @@ def select_all(study_dict):
         options_dict = create_select_all(answer, study_dict.values())
 
         print_select_all(options_dict)
-        user_answer = input("Which of the following are correct? Enter a list \
-                            of comma-separated numbers (ie. 1,3,7): ")
         
-        # Allows user to return to main menu.
-        if user_answer == "q":
-            return None
-        
-        user_correct += check.check_select_all_answer(user_answer, answer, options_dict)
-    
+        while True:
+            user_answer = input("Which of the following are correct? Enter a list \
+                                of comma-separated numbers (ie. 1,3,7): ")
+            
+            # Allows user to return to main menu.
+            if user_answer == "q":
+                return None
+            
+            try:
+                user_correct += check.check_select_all_answer(user_answer, 
+                                                    answer, options_dict)
+                break
+            except:
+                print("Invalid input. Try again.")
+
     # Print and save user score.
-    user_score = user_correct / TOTAL
-    print(f"Your score is {user_correct} / {TOTAL} and your accuracy is {user_score * 100:.2f}%.")
-    # Implement save_score(user_score, "select all")
+    user_score = user_correct / TOTAL * 100
+    print(f"Your score is {user_correct} / {TOTAL} and"\
+        f"your accuracy is {user_score:.2f}%.")
+    ask_to_save_score(study_set_name, "selectall", user_score)
 
 
 # =================== Program Specific Functions ===================
@@ -302,13 +320,19 @@ def write_mode(study_dict, study_set_name):
                 print(study_dict[key_term][i], end=", ")
 
         # Get user input and check if correct.
-        user_answer = input("Type the key term which corresponds to the given definition: ")
-        
-        if user_answer == "q":
-            return 0
-        
-        user_correct += check.check_written_answer(user_answer, answer)
-    
+        while True:
+            user_answer = input("Type the key term which corresponds"
+                                    "to the given definition: ")
+            if user_answer == "q":
+                return 0
+            
+            try:
+                user_correct += check.check_written_answer(user_answer, answer)
+                break
+            
+            except:
+                print("Invalid input. Try again.")
+
     # Calculate and save user score.
     user_score = user_correct / TOTAL_POINTS * 100
     print(f"You scored {user_score:.2f}%")
