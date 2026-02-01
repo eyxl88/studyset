@@ -114,6 +114,7 @@ def save_data_to_csv(entry_dict: dict[str, list[str]]):
 def read_data_from_csv():
     """Takes csv file and reads csv file into test-ready dictionary."""
     csv_to_read = input("Input name of csv to read with extension: ")
+    csv_to_read = os.path.abspath(csv_to_read)
     study_set_name = csv_to_read[:-4] # Remove .csv extension
     dict_read_from_csv = {}
     
@@ -491,11 +492,9 @@ def save_score(study_set_name, section, score):
     
     # Find / create filename for the scores file of this study mode.
     section = study_set_name + "_" + section + "_scores.txt"
+    section = os.path.join("test_files", section)
+    section = os.path.abspath(section)
 
-    # In case the section file is created in a different local folder.
-    if os.path.exists(section):
-        section = os.path.abspath(section)
-    
     # Create / open file and read contents to update (if any).
     with open(section, "w+") as file:
         list_of_contents = file.readlines()
@@ -506,6 +505,7 @@ def save_score(study_set_name, section, score):
             file.write(create_score_attempt(now_formatted, score))
             file.write("\n")
             file.write(create_overall_score(score))
+            file.write("\n")
         
         # If the user score file has existing attempts on record:
         else:
@@ -516,6 +516,7 @@ def save_score(study_set_name, section, score):
                 file.write("\n")
             
             file.write(update_overall_score(rewrite_list))
+            file.write("\n")
 
 # ======================= Read Score ====================================================
 
@@ -528,7 +529,6 @@ def read_score(study_set_name, study_mode):
         filepath = study_set_name + "_" + study_mode + "_scores.txt"
         filepath = os.path.join("test_files", filepath)
         filepath = os.path.abspath(filepath)
-        print(filepath)
         
         with open(filepath, "r") as score_file:
             contents = score_file.readlines()
@@ -545,6 +545,8 @@ def read_all_scores(study_set_name):
     for mode in ACCEPTED_STUDY_MODE_LIST:
         # Create filepath for files
         filepath = study_set_name + "_" + mode + "_scores.txt"
+        filepath = os.path.join("test_files", filepath)
+        filepath = os.path.abspath(filepath)
 
         # For modes which have existing score files
         if os.path.exists(filepath):
