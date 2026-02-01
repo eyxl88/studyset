@@ -1,10 +1,14 @@
 import os, platform, csv, random
 import libs.chronological as chrono
 import libs.check_question as check
-import datetime
+from datetime import datetime
 
 # Bunch of helper functions and stuff I couldn't find the place to actually
 # sort them into. Very messy, I know :)
+
+# ==================================== Constants =================================
+ACCEPTED_READ_SCORE_INPUTS = ["mode", "all", "q"]
+ACCEPTED_STUDY_MODE_LIST = ["mcqdef", "mcqkey", "write", "match", "selectall", "chron"]
 
 # ==================================== Create ====================================
 
@@ -181,7 +185,8 @@ def print_from_options_dict(options_dict):
     """Prints options A-E from an options dict, separating answer lists onto new \
         lines for printing."""
     for key in options_dict:
-        print(f"{key}: {"\n".join(options_dict[key])}")
+        print(f"{key}: {"\n   ".join(options_dict[key])}")
+        print("-" * 79)
 
 def print_select_all(options_dict: dict[int, str]):
     """
@@ -291,6 +296,7 @@ def print_menu():
     print("Press 'm' to be quizzed by matching key terms to definitions.")
     print("Press 'fc' for flashcard mode of studying.")
     print("Press 'chr' to be quizzed with ordering questions on key terms.")
+    print("Press 'readscore' to see your saved scores.")
     print("Press 'exit' to quit.")
 
 # ==================================== Write Mode ====================================
@@ -480,7 +486,7 @@ def save_score(study_set_name, section, score):
         
     """
     # Find current time to save score under.
-    now = datetime.now
+    now = datetime.now()
     now_formatted = now.strftime("%Y/%m/%d %H:%M")
     
     # Find / create filename for the scores file of this study mode.
@@ -488,7 +494,7 @@ def save_score(study_set_name, section, score):
 
     # In case the section file is created in a different local folder.
     if os.path.exists(section):
-        section = os.path.find(section)
+        section = os.path.abspath(section)
     
     # Create / open file and read contents to update (if any).
     with open(section, "w+") as file:
@@ -498,6 +504,7 @@ def save_score(study_set_name, section, score):
         # If the user score file for that section is empty:
         if overall_score == "FileNotWritten":
             file.write(create_score_attempt(now_formatted, score))
+            file.write("\n")
             file.write(create_overall_score(score))
         
         # If the user score file has existing attempts on record:
@@ -506,5 +513,77 @@ def save_score(study_set_name, section, score):
             
             for item in rewrite_list:
                 file.write(item)
+                file.write("\n")
             
             file.write(update_overall_score(rewrite_list))
+
+# ======================= Read Score ====================================================
+
+def read_score(study_set_name, study_mode):
+    if study_mode not in ACCEPTED_STUDY_MODE_LIST:
+        print("Invalid study mode. Returning to read score menu...")
+        ask_to_read_score()
+
+    try:
+        filepath = study_set_name + "_" + study_mode + "_scores.txt"
+        filepath = os.path.join("test_files", filepath)
+        filepath = os.path.abspath(filepath)
+        print(filepath)
+        
+        with open(filepath, "r") as score_file:
+            contents = score_file.readlines()
+            for line in contents:
+                print(line)
+
+    except:
+        input("File not found. Press any key to return to the score reading menu.")
+        ask_to_read_score()
+
+
+def read_all_scores(study_set_name):
+    """Reads scores for all modes in a study set which have been played"""
+    for mode in ACCEPTED_STUDY_MODE_LIST:
+        # Create filepath for files
+        filepath = study_set_name + "_" + mode + "_scores.txt"
+
+        # For modes which have existing score files
+        if os.path.exists(filepath):
+            read_score(study_set_name, mode)
+
+
+def ask_to_read_score():
+    print("Would you like to read scores only from a specific mode of a study set?")
+    print("Or would you like to read scores from all modes of a particular study set?")
+
+    while True:
+        user_choice = input("Enter 'mode' or 'all' or 'q' to exit: ")
+        user_choice.strip().lower()
+        print(user_choice)
+        
+        # Handles incorrect inputs.
+        if user_choice not in ACCEPTED_READ_SCORE_INPUTS:
+            print("Invalid input. Try again...")
+            continue
+        
+        # Returns user to Main Menu.
+        elif user_choice == "q":
+            break
+        
+        study_set_name = input("Enter name of study set: ")
+        study_set_name.strip().lower()
+        print(study_set_name)
+        
+        if user_choice == "mode":
+            study_mode = input("Enter mode that you want scores from: ")
+            read_score(study_set_name, study_mode)
+            input("Press any key to return to the main menu...")
+            break
+
+        elif user_choice == "all":
+            read_all_scores(study_set_name)
+            input("Press any key to continue / return to the main menu...")
+            break
+    
+
+
+        

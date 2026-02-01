@@ -47,7 +47,8 @@ def multiple_choice(study_dict: dict[str, list[str]], study_set_name):
     
     Parameter:
         study_dict (dict[str, list[str]]): study set containing key terms and definitions.
-
+        study_set_name (str): string representing name of study set for save_score purposes.
+    
     Returns None.
     
     """
@@ -78,12 +79,13 @@ def multiple_choice(study_dict: dict[str, list[str]], study_set_name):
             
             try:
                 output = check.check_answer(user_answer, answer, options_dict)
+                user_correct += output
                 break
 
             except:
-                print("Invalid input. Try again.")
+                print("Invalid input. Try again.\n")
 
-        user_correct += output
+        
         print()
 
     # Print and save user score.

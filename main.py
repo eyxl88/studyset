@@ -12,7 +12,7 @@ from libs.utils import check_file_loaded
 NEWEST_DICT: dict[Any, Any] = {}
 ACCEPTED_USER_INPUTS: list[str] = ['exit', 'c', 's', 'r', 'mcqdef', 
                         'mcqkey', 'selectall', 'selectall', 
-                        'w', 'm', 'fc', 'chr']
+                        'w', 'm', 'fc', 'chr', 'readscore']
 
 # Main program loop
 def main():
@@ -63,6 +63,9 @@ def main():
 
             elif user_input == "chr" and check_file_loaded(is_file_loaded):
                 chronological(NEWEST_DICT, study_set_name)
+
+            elif user_input == "readscore":
+                utils.ask_to_read_score()
         
         else:
             # User input is not valid.

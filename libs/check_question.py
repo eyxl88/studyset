@@ -1,5 +1,7 @@
 import libs.utils as utils
 
+ACCEPTED_MCQ_LIST = ["A", "B", "C", "D", "E"]
+
 # All answer checking found here.
 
 def check_answer(user_answer, answer, options_dict):
@@ -11,32 +13,41 @@ def check_answer(user_answer, answer, options_dict):
     --options_dict: dictionary with option letters or numbers as keys and 
                     the answer text as values.
 
-    Returns None
+    Returns:
+        None: if user input is invalid
+        (0 | 1): depends on whether user gets the answer correct (1) or wrong (0)
     
     """
-    try:
-        # Reformat string as capital letter and check if user answer matches real answer.
+    # Reformat string as capital letter and check if user answer matches real answer.
+    user_answer.upper().strip()
+    
+    # Return None for invalid inputs to trigger exception in mcqdef main function.
+    if user_answer not in ACCEPTED_MCQ_LIST:
+        return None
+    
+    # If answer is correct
+    if answer == options_dict[user_answer]:
+        print("Correct")
+        print()
+        return 1
+
+    # If initial answer is incorrect
+    else:
+        # Second chance for user to answer correctly.
+        user_answer = input("Incorrect. One last try: ")
         user_answer.upper().strip()
+            
         if answer == options_dict[user_answer]:
             print("Correct")
             print()
-
+                    
         else:
-            # Second chance for user to answer correctly.
-            user_answer = input("Incorrect. One last try: ")
-            user_answer.upper().strip()
+            # Print the correct answer on multiple lines if the answer list consists
+            # of more than one line of definitions.
+            print(f"The correct answer is {"\n".join(answer)}")
+            print()
             
-            if answer == options_dict[user_answer]:
-                print("Correct")
-                print()
-            
-            else:
-                # Print the correct answer on multiple lines if the answer list consists
-                # of more than one line of definitions.
-                print(f"The correct answer is {"\n".join(answer)}")
-                print()
-    except:
-        print("Invalid entry. Moving to next question.\n")
+        return 0
 
 
 def check_answer_one_phrase(user_answer, answer, options_dict):
