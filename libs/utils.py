@@ -431,25 +431,25 @@ def reformat_scores_list(list):
             list_to_return.append(row)
     
     # Attempt to get the last item from the list and assign to overall_score.
-    try:
-        overall_score = list_to_return.pop()
-        return list_to_return, overall_score
-    
-    except:
-        overall_score = "FileNotWritten"
-    
+    #try:
+    overall_score = list_to_return.pop()
     return list_to_return, overall_score
+    
+    #except:
+        #overall_score = "FileNotWritten"
+    #input(overall_score)
+    #return list_to_return, overall_score
 
 
 def create_score_attempt(time_string, score):
     """Takes a string representing the time and a score, formatting an attempt string"""
-    string = time_string + " - You scored " + f"{score:.2f}%"
+    string = time_string + " - You scored " + f"{score:.2f}%\n"
     return string
 
 
 def create_overall_score(score):
     """Takes a float score and returns a 1st attempt overall score string"""
-    string = f"Your overall score is {score:.2f}% after 1 attempt!"
+    string = f"Your overall score is {score:.2f}% after 1 attempt!\n"
     return string
 
 
@@ -461,7 +461,7 @@ def update_overall_score(list_of_history: list[str]):
     for row in list_of_history:
         if row:
             temp_list = row.split(" - You scored ")
-            score = float(temp_list[1][:-1])
+            score = float(temp_list[1][:-2]) # Remove newline and percentage from scores.
             past_score_list.append(score)
     
     # Calculate average score and number of attempts from past_score_list.
@@ -469,7 +469,7 @@ def update_overall_score(list_of_history: list[str]):
     num_attempts = len(past_score_list)
 
     # Create a new updated overall score string and return.
-    string = f"Your overall score is {avg_score:.2f}% after {num_attempts} attempts!"
+    string = f"Your overall score is {avg_score:.2f}% after {num_attempts} attempts!\n"
     
     return string
 
@@ -496,8 +496,11 @@ def save_score(study_set_name, section, score):
     section = os.path.abspath(section)
 
     # Create / open file and read contents to update (if any).
-    with open(section, "w+") as file:
-        list_of_contents = file.readlines()
+    with open(section, "r") as file:
+        list_of_contents = []
+        for line in file.readlines():
+            list_of_contents.append(line)
+        input(list_of_contents)
         rewrite_list, overall_score = reformat_scores_list(list_of_contents)
         
         # If the user score file for that section is empty:
@@ -510,13 +513,12 @@ def save_score(study_set_name, section, score):
         # If the user score file has existing attempts on record:
         else:
             rewrite_list.append(create_score_attempt(now_formatted, score))
-            
-            for item in rewrite_list:
-                file.write(item)
-                file.write("\n")
-            
-            file.write(update_overall_score(rewrite_list))
-            file.write("\n")
+            with open(section, "w") as file2:
+                
+                for item in rewrite_list:
+                    file2.write(item)
+                
+                file2.write(update_overall_score(rewrite_list))
 
 # ======================= Read Score ====================================================
 
@@ -533,7 +535,7 @@ def read_score(study_set_name, study_mode):
         with open(filepath, "r") as score_file:
             contents = score_file.readlines()
             for line in contents:
-                print(line)
+                print(line, end="")
 
     except:
         input("File not found. Press any key to return to the score reading menu.")
@@ -550,8 +552,9 @@ def read_all_scores(study_set_name):
 
         # For modes which have existing score files
         if os.path.exists(filepath):
+            print(mode)
             read_score(study_set_name, mode)
-
+            print()
 
 def ask_to_read_score():
     print("Would you like to read scores only from a specific mode of a study set?")

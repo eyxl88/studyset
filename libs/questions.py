@@ -134,7 +134,7 @@ def multiple_choice_flipped(study_dict: dict[str, list[str]], study_set_name):
                 return None
                 
             try:
-                question_score = utils.check_answer_one_phrase(user_answer, answer, options_dict)
+                question_score = check.check_answer_one_phrase(user_answer, answer, options_dict)
                 break
 
             except:

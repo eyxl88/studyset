@@ -72,6 +72,7 @@ def check_answer_one_phrase(user_answer, answer, options_dict):
         if answer == options_dict[user_answer]:
             print("Correct")
             print()
+            return 1
 
         else:
             # Allow the user to enter a second guess and check if correct.
