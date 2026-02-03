@@ -19,7 +19,7 @@ def check_answer(user_answer, answer, options_dict):
     
     """
     # Reformat string as capital letter and check if user answer matches real answer.
-    user_answer.upper().strip()
+    user_answer = user_answer.upper().strip()
     
     # Return None for invalid inputs to trigger exception in mcqdef main function.
     if user_answer not in ACCEPTED_MCQ_LIST:
@@ -54,46 +54,43 @@ def check_answer_one_phrase(user_answer, answer, options_dict):
     """Checks user answer with answer when the correct answer is a word or phrase.
     
     Parameters:
-        user_answer: string which should be a single letter key in options_dict.
-        answer: string which is the correct answer
-        options_dict: dictionary containing the question choices and associated text.
+        user_answer (str): string which should be a single letter key in options_dict.
+        answer (str): string which is the correct answer
+        options_dict (str): dictionary containing the question choices and associated text.
 
     Returns:
         (0 | 1): depends on whether user answer is correct (1) or wrong (0).
+        None: if the input is invalid.
 
     """
     
-    try:
-        global completion
-
-        # Reformat user text as a capital letter without spaces and check.
-        user_answer.upper().strip()
+    # Reformat user text as a capital letter without spaces and check.
+    user_answer = user_answer.strip().upper()
         
-        if answer == options_dict[user_answer]:
-            print("Correct")
-            print()
-            return 1
+    if answer == options_dict[user_answer]:
+        print("Correct")
+        print()
+        return 1
+        
+    # Return none to trigger exception in question function.
+    elif user_answer not in ACCEPTED_MCQ_LIST:
+        print("Invalid input. Try again.")
+        return None
 
+    else:
+        # Second chance for user to answer correctly.
+        user_answer = input("Incorrect. One last try: ")
+        user_answer.upper().strip()
+
+        if answer == options_dict[user_answer]:
+            print("Correct!")
+            print()
+
+        # Print incorrect answer message.
         else:
-            # Allow the user to enter a second guess and check if correct.
-            user_answer = input("Incorrect. One last try: ")
-            user_answer.upper().strip()
-            
-            if answer == options_dict[user_answer]:
-                print("Correct")
-                print()
-                completion = True
-                return 1
-                
-            else:
-                # Print incorrect answer message.
-                print(f"The correct answer is {answer}")
-                print()
-                completion = True
-                return 0
-    
-    except:
-        print("Invalid entry. Try again.\n")
+            print(f"The correct answer is {answer}")
+            print()
+        
         return 0
 
 
@@ -102,17 +99,21 @@ def check_select_all_answer(user_answer, answer, options_dict):
     Checks user answers for select all mode against correct answers.
     
     Parameters:
-        user_answer (str): 
-        answer: Description
-        options_dict: Description
+        user_answer (str): user answer as a comma separated string of numbers
+        answer (list[str]): correct answer with a list of string options
+        options_dict (dict[int: str]): dictionary of integers corresponding to string answers.
     
     Returns:
         user_score (0 | 1): depends on whether user answers are correct (1) or wrong (0).
+        None: triggers exception in select_all function for invalid input
     
     """
     
     # Turn user answer string into user answer list.
-    user_answer = user_answer.split(",")
+    if "," in user_answer:
+        user_answer = user_answer.split(",")
+    else:
+        user_answer = list(user_answer)
 
     # Remove blank entries from the user answer list.
     user_answer = [int(i) for i in user_answer if i.isspace() != True]
@@ -125,6 +126,8 @@ def check_select_all_answer(user_answer, answer, options_dict):
     correct_total = len(answer)
 
     for num in user_answer:
+        if num not in options_dict.keys():
+            return None
 
         if options_dict[num] in answer:
             user_total += 1
@@ -135,33 +138,35 @@ def check_select_all_answer(user_answer, answer, options_dict):
     
     # If the user selects all correct answers.
     if user_total == correct_total and len(user_incorrect_answers) == 0:
-        print(f"Correct! You selected {user_total}/{correct_total} correct answers and 0 wrong answers!")
+        print(f"Correct! You selected {user_total}/{correct_total} correct answers"\
+              " and 0 wrong answers!\n")
         
         return 1
 
     # If the user selects additional wrong answers.
     elif user_total == correct_total and len(user_incorrect_answers) != 0:
-        print(f"Almost there! You selected {user_total}/{correct_total} correct\
-             answers and {len(user_incorrect_answers)} wrong answers!")
-        print(f"The following answers were incorrect: {", ".join(user_incorrect_answers)}")   
+        print(f"Almost there! You selected {user_total}/{correct_total} correct"\
+             f" answers and {len(user_incorrect_answers)} wrong answers!")
+        print(f"The following answers were incorrect: {", ".join(user_incorrect_answers)}\n")
         
         return 0
 
     # If the user selects multiple wrong answers and not enough correct answers.
     elif user_total != correct_total and len(user_incorrect_answers) != 0:
-        print(f"Incorrect. You selected {user_total}/{correct_total} correct answers \
-              and {len(user_incorrect_answers)} wrong answers!")
+        print(f"Incorrect. You selected {user_total}/{correct_total} correct answers"\
+              f" and {len(user_incorrect_answers)} wrong answers!")
         print(f"The correct answers included:\n{"\n".join(answer)}")
         print(f"You additionally selected these wrong answers:")
         utils.print_comma_separated_values(user_incorrect_answers) 
-        
+        print()
+
         return 0
     
     # If the user does not select all the correct answers, but didn't select the wrong answers.
     else:
         print(f"Incorrect. You selected {user_total}/{correct_total}"\
-            " correct answers and 0 wrong answers.")
-        print(f"The correct answers included:\n{"\n".join(answer)}")
+            f" correct answers and 0 wrong answers.")
+        print(f"The correct answers included:\n{"\n".join(answer)}\n")
         
         return 0
 
@@ -216,9 +221,13 @@ def check_match_answer(user_answer, options_dict_numeric, options_dict, study_di
     TOTAL_POINTS = len(study_dict)
     
     matches_correct = 0
+    match_correct_list = []
     matches_wrong = []
     right_matches = []
-    user_answer = utils.process_match_input(user_answer)
+    user_answer = utils.process_match_input(user_answer, options_dict_numeric, options_dict)
+
+    if user_answer == "InvalidInput":
+        return None
     
     # Count how many correct matches there are and append each wrong match to matches_wrong.
     for list in user_answer:
@@ -227,6 +236,8 @@ def check_match_answer(user_answer, options_dict_numeric, options_dict, study_di
         
         if study_dict[key] == answer:
             matches_correct += 1
+            match_correct_list.append(list[0])
+            print(match_correct_list)
         
         else:
             matches_wrong.append(f"{list[0]}{list[1]}")
@@ -245,6 +256,22 @@ def check_match_answer(user_answer, options_dict_numeric, options_dict, study_di
             print(f"{matches_wrong[i]} should be {right_matches[i]}")
         
         print()
+        
+        if len(matches_wrong) + len(match_correct_list) < TOTAL_POINTS:
+            print("You forgot to include these matches: ")
+            
+            # Check if there are matches (key integers) not in the user's answers.
+            for key in options_dict_numeric:
+                print(key)
+                for item in matches_wrong:
+                    print(item)
+                    for correct_answer in match_correct_list:
+                        print(correct_answer)
+                        if str(key) not in item and str(key) not in correct_answer:
+                            print("x")
+                            answer = utils.get_dict_key(options_dict, study_dict[key])
+                            print(f"{key}{answer}")
+
         user_score = matches_correct / TOTAL_POINTS
     
     return user_score

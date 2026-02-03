@@ -59,20 +59,27 @@ def match_answers(study_dict, study_set_name):
     random.shuffle(definitions_list)
 
     options_dict = chrono.create_chronological(definitions_list)
-    options_dict_numeric = chrono.create_numeric_options(terms_list)
+    options_dict_numeric = create_numeric_options(terms_list)
     
     # Print Question
     print()
     print_words_from_options_dict(options_dict_numeric)
     print_from_options_dict(options_dict)
+    
+    while True:
+        user_input = input("Enter the matches in any order in the form 1B,2A,3D,4C: ")
+        if user_input == "q":
+            return 0
 
-    user_input = input("Enter the matches in any order in the form 1B,2A,3D,4C: ")
-    if input == "q":
-        return 0
+        # Calculate, print, and save score.
+        #try:
+        user_score = check.check_match_answer(user_input, options_dict_numeric, 
+                                            options_dict, study_dict) * 100
+        break
 
-    # Calculate, print, and save score.
-    user_score = check.check_match_answer(user_input, options_dict_numeric, 
-                                        options_dict, study_dict) * 100
+        #except:
+            #print("Invalid input. Try again or enter q to exit.")
+
     print(f"You scored {user_score:.2f}%!")
     ask_to_save_score(study_set_name, "match", user_score)
 
@@ -152,21 +159,37 @@ def process_text(string):
     return final_string
 
 
-def process_match_input(user_answer, study_dict):
+def process_match_input(user_answer, options_dict_numeric, options_dict):
     """Turns match string input into a list of lists in the form list[list[int, str]]."""
     user_answer_list = user_answer.split(",")
 
     for i in range(len(user_answer_list)):
-        try:
-            # Turns the first character of each list item into an int and the second character
-            # into an upper case letter, then replaces the item with this list.
-            user_answer_list[i] = [int(user_answer_list[i][0]), user_answer_list[i][1].upper()]
+        formatted_list = []
+        for i in range(len(user_answer_list)):
+            formatted_list.append(["", ""])
+            for char in user_answer_list[i]:
+                if char.isdigit():
+                    formatted_list[i][0] += char # Add numbers to first list item.
+                else:
+                    formatted_list[i][1] += char.upper() # Add letters to second list item.
+            
+        formatted_list = [[int(i[0]), i[1]] for i in formatted_list] # Make numbers to integers
+        
+        # Check for invalid input values in either the letters or numbers provided.
+        integer_list = [i[0] for i in formatted_list]
+        letter_list = [i[1] for i in formatted_list]
 
-        except:
-            print("Invalid input. Reloading question...")
-            match_answers(study_dict)
+        for i in range(len(integer_list)):
+            if (integer_list[i] not in options_dict_numeric.keys() or
+            letter_list[i] not in options_dict.keys()):
+                break
 
-    return user_answer_list
+        else:
+            # If all processed inputs are valid.
+            return formatted_list
+        
+        # If input is invalid:
+        return("InvalidInput")
 
 # ==================================== Print ====================================
 
@@ -213,7 +236,7 @@ def print_comma_separated_values(list_to_print):
 
     """
     for i in range(len(list_to_print)):
-        if i == len - 1:
+        if i == len(list_to_print) - 1:
             print(list_to_print[i])
         else:
             print(f"{list_to_print[i]}, ")
@@ -247,10 +270,11 @@ def select_all(study_dict, study_set_name):
         options_dict = create_select_all(answer, study_dict.values())
 
         print_select_all(options_dict)
+        print()
         
         while True:
-            user_answer = input("Which of the following are correct? Enter a list \
-                                of comma-separated numbers (ie. 1,3,7): ")
+            user_answer = input("Which of the following are correct? Enter a list"\
+                                " of comma-separated numbers (ie. 1,3,7): ")
             
             # Allows user to return to main menu.
             if user_answer == "q":
@@ -266,7 +290,7 @@ def select_all(study_dict, study_set_name):
     # Print and save user score.
     user_score = user_correct / TOTAL * 100
     print(f"Your score is {user_correct} / {TOTAL} and"\
-        f"your accuracy is {user_score:.2f}%.")
+        f" your accuracy is {user_score:.2f}%.")
     ask_to_save_score(study_set_name, "selectall", user_score)
 
 
@@ -496,29 +520,31 @@ def save_score(study_set_name, section, score):
     section = os.path.abspath(section)
 
     # Create / open file and read contents to update (if any).
-    with open(section, "r") as file:
-        list_of_contents = []
-        for line in file.readlines():
-            list_of_contents.append(line)
-        input(list_of_contents)
-        rewrite_list, overall_score = reformat_scores_list(list_of_contents)
-        
-        # If the user score file for that section is empty:
-        if overall_score == "FileNotWritten":
-            file.write(create_score_attempt(now_formatted, score))
-            file.write("\n")
-            file.write(create_overall_score(score))
-            file.write("\n")
-        
-        # If the user score file has existing attempts on record:
-        else:
+    if os.path.exists(section):
+        with open(section, "r") as file:
+            list_of_contents = []
+            
+            for line in file.readlines():
+                list_of_contents.append(line)
+
+            rewrite_list, overall_score = reformat_scores_list(list_of_contents)
+            
+            # If the user score file has existing attempts on record:
             rewrite_list.append(create_score_attempt(now_formatted, score))
-            with open(section, "w") as file2:
                 
+            # Rewrite existing file contents
+            with open(section, "w") as file2:
                 for item in rewrite_list:
                     file2.write(item)
-                
+                    
+                # Write the last overall score line.
                 file2.write(update_overall_score(rewrite_list))
+
+    # If the user score file for that section is empty:
+    else:
+        with open(section, "w") as file:
+            file.write(create_score_attempt(now_formatted, score))
+            file.write(create_overall_score(score))
 
 # ======================= Read Score ====================================================
 
@@ -552,7 +578,6 @@ def read_all_scores(study_set_name):
 
         # For modes which have existing score files
         if os.path.exists(filepath):
-            print(mode)
             read_score(study_set_name, mode)
             print()
 
@@ -563,7 +588,6 @@ def ask_to_read_score():
     while True:
         user_choice = input("Enter 'mode' or 'all' or 'q' to exit: ")
         user_choice.strip().lower()
-        print(user_choice)
         
         # Handles incorrect inputs.
         if user_choice not in ACCEPTED_READ_SCORE_INPUTS:
@@ -576,7 +600,6 @@ def ask_to_read_score():
         
         study_set_name = input("Enter name of study set: ")
         study_set_name.strip().lower()
-        print(study_set_name)
         
         if user_choice == "mode":
             study_mode = input("Enter mode that you want scores from: ")
