@@ -221,10 +221,10 @@ def check_match_answer(user_answer, options_dict_numeric, options_dict, study_di
     TOTAL_POINTS = len(study_dict)
     
     matches_correct = 0
-    match_correct_list = []
     matches_wrong = []
     right_matches = []
     user_answer = utils.process_match_input(user_answer, options_dict_numeric, options_dict)
+    user_matches_list = [i[0] for i in user_answer]
 
     if user_answer == "InvalidInput":
         return None
@@ -236,8 +236,6 @@ def check_match_answer(user_answer, options_dict_numeric, options_dict, study_di
         
         if study_dict[key] == answer:
             matches_correct += 1
-            match_correct_list.append(list[0])
-            print(match_correct_list)
         
         else:
             matches_wrong.append(f"{list[0]}{list[1]}")
@@ -257,20 +255,14 @@ def check_match_answer(user_answer, options_dict_numeric, options_dict, study_di
         
         print()
         
-        if len(matches_wrong) + len(match_correct_list) < TOTAL_POINTS:
+        if len(matches_wrong) + matches_correct < TOTAL_POINTS:
             print("You forgot to include these matches: ")
             
             # Check if there are matches (key integers) not in the user's answers.
             for key in options_dict_numeric:
-                print(key)
-                for item in matches_wrong:
-                    print(item)
-                    for correct_answer in match_correct_list:
-                        print(correct_answer)
-                        if str(key) not in item and str(key) not in correct_answer:
-                            print("x")
-                            answer = utils.get_dict_key(options_dict, study_dict[key])
-                            print(f"{key}{answer}")
+                if key not in user_matches_list:
+                    answer = utils.get_dict_key(options_dict, study_dict[options_dict_numeric[key]])
+                    print(f"{key}{answer}")
 
         user_score = matches_correct / TOTAL_POINTS
     

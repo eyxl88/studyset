@@ -72,13 +72,13 @@ def match_answers(study_dict, study_set_name):
             return 0
 
         # Calculate, print, and save score.
-        #try:
-        user_score = check.check_match_answer(user_input, options_dict_numeric, 
+        try:
+            user_score = check.check_match_answer(user_input, options_dict_numeric, 
                                             options_dict, study_dict) * 100
-        break
+            break
 
-        #except:
-            #print("Invalid input. Try again or enter q to exit.")
+        except:
+            print("Invalid input. Try again or enter q to exit.")
 
     print(f"You scored {user_score:.2f}%!")
     ask_to_save_score(study_set_name, "match", user_score)
@@ -455,14 +455,14 @@ def reformat_scores_list(list):
             list_to_return.append(row)
     
     # Attempt to get the last item from the list and assign to overall_score.
-    #try:
-    overall_score = list_to_return.pop()
-    return list_to_return, overall_score
+    try:
+        overall_score = list_to_return.pop()
+        return list_to_return, overall_score
     
-    #except:
-        #overall_score = "FileNotWritten"
-    #input(overall_score)
-    #return list_to_return, overall_score
+    except:
+        overall_score = "FileNotWritten"
+        input(overall_score)
+        return list_to_return, overall_score
 
 
 def create_score_attempt(time_string, score):
