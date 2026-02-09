@@ -1,7 +1,7 @@
 from typing import Any
 import libs.utils as utils
 from libs.chronological import chronological
-from libs.questions import multiple_choice, multiple_choice_flipped, flashcard
+from libs.questions import multiple_choice, multiple_choice_flipped, flashcard, write_mode, match_answers, select_all
 from libs.utils import check_file_loaded
 
 # Check files files inside ./libs folder for all the code that was once here.
@@ -50,13 +50,13 @@ def main():
                 multiple_choice_flipped(NEWEST_DICT, study_set_name)
 
             elif user_input == "selectall" and check_file_loaded(is_file_loaded):
-                utils.select_all(NEWEST_DICT, study_set_name)
+                select_all(NEWEST_DICT, study_set_name)
 
             elif user_input == "w" and check_file_loaded(is_file_loaded):
-                utils.write_mode(NEWEST_DICT, study_set_name)
+                write_mode(NEWEST_DICT, study_set_name)
 
             elif user_input == "m" and check_file_loaded(is_file_loaded):
-                utils.match_answers(NEWEST_DICT, study_set_name)
+                match_answers(NEWEST_DICT, study_set_name)
 
             elif user_input == "fc" and check_file_loaded(is_file_loaded):
                 flashcard(NEWEST_DICT)

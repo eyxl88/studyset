@@ -17,7 +17,8 @@ def create_chronological(list_of_terms):
     options_dict = {}
 
     for i in range(len(list_of_terms)):
-        key = chr(ord("A") + i) # Assign a letter from A onwards as the key.
+        # Assign a letter from A to Z with doubling onwards (AA, AAA) as the key.
+        key = chr(ord("A") + (i % 26)) * (i // 26 + 1)
         term_to_order = list_of_terms[i] 
         options_dict[key] = term_to_order
 

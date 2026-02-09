@@ -1,0 +1,152 @@
+modern economy,"millions of people, organized groups, firms, individuals",pursue disparate interests in limited environment
+
+relative order of the market,individual activities are coordinated,the economy uses Smith's invisible hand,"despite conflicting interests, the result of selfishness becomes socially satisfactory"
+
+paradox,macroecon models have no activity that needs coordination,assume all choices of all diverse agents = one representative standard utility maximizing individual,coincide with aggregate choice of heterogenous individuals
+
+Kirman's main claim,reduction to of group of heterogenous agents is unjustified and misleading even if all people are utility maximizers
+
+unemployment,coordination failures that are unsuited for the model,no trade,"no stock market, no distributional concerns for government policy, no asymmetric information"
+
+two key problems with claim,no trade,unemployment
+
+macroecon counter argument,models not meant to study coordination related activities but only large macroecon phenomena
+
+rebuttal,no link between collective and individual rationality,the choices of the rep agent dont represent the aggregate reaction,the aggregate choice can disagree with every individual's choice,constraints of explaining behavior of group with 1 agent
+
+rationality link,no link between actions of individual and collective,individual utility maximiazation does not mean collective rationality,collective's seeming overall rationality is not individual rationality
+
+constraints of group vs. 1 agent,sum of plausible economic individuals = complicated dynamics,one individual with these dynamics = one very weird representative person,rejection of behavioral hypotheses may reflect rejection of hypotheses or the agent
+
+why the rep agent?,constrained maximizer makes for an adequate business model,need unique and stable equilibria,require certain individual excess demand properties
+
+stable equilibria,justifies ideas of economies returning to equilibrium
+
+unique equilibria,justifies comparative statistics on effects of change
+
+origins of rep agent,"if all individuals have a certain property, so must the aggregate"
+
+Edgeworth 1881,present 1 dealer and assume compettiion in background,"at least they had 2 agents trading back then, now just 1"
+
+transferable assumption
+
+can we make the rep agent work?,try to assume something about individuals to guarantee that collectivity acts as an individual,not plausible assumptions
+
+2 assumptions,identitical homothetic utility curves,fixed relative income distribution
+
+identical homothetic utility curves,consumption scales linearly with income,linear Engel curves,group = scaled up version of one person,same proportion of income is spent on the same good
+
+fixed relative income distribution,even if there are different homothetic utility curves,the income distribution is independent of prices,each person makes the same constant percentage of total income,"even when prices change, certain incomes wont change for those industries"
+
+no trade reconciliation,the economy is in equilibrium with same production and consumption taking place,combine everything into 1 individual representing firms and consumers
+
+individual economic activity,"movements around equilibrium, just noise or small deviations from a stable/unaffected equilibrium"
+
+IRL re-equilibration,arbitrage and individual actions necessary to bring econ back to equilibrium
+
+kirman's pov on individual activity,the stable equilibrium is untrue unless economy automatically returns to stable equilibrium through tatonnement when it deviates
+
+macro basis on tatonnement,"since production is not always equal to consumption, the representative individual provides stability and uniqueness not guaranteed by the model",it is an artifical construct
+
+contradiction of the model,single individual actions needed to restore equilbirium while using a single rep agent
+
+tatonnement,price setter adjusts based on demand / exvess supply so that production will equal consumption
+
+Morishima,equilibrium is useless without stability,if govt cant maintain equilibrium its just a utopian dream
+
+properties (3) after aggregation,Walras' law,continuity,homogeneity of degree zero
+
+homogeneity of degree zero,it's the relative price (compared to one another) which matters
+
+walras' law,total excess demand is equal to 0 at all prices,more demand of one good means surplus of a nother,total spending = total income,the overall budget holds
+
+properties that dont carry over with aggregation,unique and stable equilbiria of individual excess demand curves
+
+weak axiom of revealed preference,does not carry over,"if a customer chooses x when y was affordable, they will never later choose y when x is affordable"
+
+WARP,weak axiom of revealed preference,doesn't work in the aggregate
+
+positive remark about multiple equilibria,per the SDM result the equilibria are not arbitrarily close to each other,possible to predict by following the next nearest equilibria since they are locally unique,"the economy starts at one stable equilbiria and a small change occurs, shifting it to the next nearest one"
+
+rep agent != aggregate choices,misleading policy analysis,"the equilibrium is artificially, mathematically aligned at that one point, but the rest of the mathematical function is not",change affects individuals differently
+
+change and the rep agent,the rep agent before might not be the same as the rep agent after,effects of subsidies to production are miscalculated with the agent
+
+modeling with the rep agent,make a change and see the new equilbrium for the rep agent,implicit assumption that choice of rep agent = choice of aggregate
+
+caveat in rep agent,we will ignore distributional considerations
+
+introduction of margin reqs to reduce stock price volatility,affects only behavior of certain individuals,the new rep agent is different from the old,can't calculate using the old since its choices are not the aggregate's new choice
+
+rep agent choice vs. aggregate choice,even if the representative agent's choice matched society's aggregate choice,it could be different from the preferences of individuals in the economy,using the rep individual to make policy choices is illegit
+
+hypothesis rejection,Summer points out that Hansen and Singleton's rejection of consumption-asset pricing is a rejection of the representative individual,excess smoothness of consumption
+
+excess smoothness of consumption,consumption sectors' rep agent doesnt react as much to income changes as predicted by permanent income hypotheses,labor income ups and downs vs. consumption curve
+
+Diebold and Rudebusch,"claim consumption agent takes into account low frequency, long run income echanges"
+
+clarida's resolution,don't look at individual with 100 year time horizon when in reality aggregating over several hetero myopic individuals,need agents of different agest o coexist w ith a suitable demographic structure,drift in per capital consumption = drift in total income,"multiple agents with permanent income hypothesis, smooth consumption, and savings for retirement"
+
+when do rep agents make sense?,when all individuals take their decisions only on basis of aggregate variables,all individuals have the same marginal reactions,equations using economy wide data are consistent with single individual behavior
+
+davidson et al,consumption depends not on income from last year but many years past,infinitely distributed lag
+
+lippi's theory,many different simple individuals reacting to current / last year income,"each with different micro variables, creating a smooth response and complex dynamics"
+
+objection to SDM,no limits on dispersion of agent characteristics,separate into distirbution of preferences and income
+
+distribution of preferences,reason for aggregate excess demand fucntions to have instability or multiple equilibria is overly wide distribution of preferences
+
+too much dispersion,"too much freedom, anything could happen"
+
+concentration,"if people are sufficiently similar, some think that stability and uniqueness can be recovered.","if individuals are almost identical, the rep agent will be more reasonable"
+
+kirman and koch,"even with identical preferences, SDM result holds"
+
+distribution of income,no distribution of income besides uniform income guarantees unique stable aggregate excess demand,"no matter how similar the income might become, the rep agent does not work and aggregate excess demand remains wild and unpredictable"
+
+Hildenbrand and Grandmont,dispersion of income and dispersion of preferences has a stabilizing effect
+
+Cournot,erratic individual demand behavior results in as mooth aggregate if inedividuals are different enough,many agents with different preferences have different jumps in dmeand and certatin prices and overall continuous
+
+Houttaker,"firms with different parameters, smooth aggregate production"
+
+Hildenbrand,"as income distribution is decreasing (pyramid), law of demand holds stable and unique equilbiria"
+
+Grandmont,very spread out prefs result in gross subsitutability in aggregate excess demand
+
+unique and stable equilibria findinds,unimportance of individual maximizing behavior,only important that agents respect budget constraints
+
+two solutions,dispersion,interaction
+
+adam smith,markets and pries organize contracts between atoms,macro should be hetero individuals interacting directly and consciously
+
+correct way of micro,"trading, organizing groups for bargaining",passage of info,building of reputations,agents are more than anonymous price takers
+
+game theory,interaction of hetergenous agents with conflicting interests
+
+game theory issues,unnatural identical individual assumptions,symmetric equilibria from studying strategy choice o f any player
+
+rebuttal to any omniscient player attacks on game theory,each individual interacts with small local subset of economy,local organization by itself creates macro regularities
+
+"diamond, roth, and sotomayor",search and matching
+
+search and matching,agents meet at random,subsequent activity of agnets is conditioned by these meetings
+
+flaws of search and matching,"doesn't consider allocation, distirbution, population, which create resultant dynamics",focus on convergence to stable state
+
+mutation,individuals have different views,proportion of agents having each view changes based on encounters and imitation
+
+offsprig,people having successful strategies have those who mimic them,players meet at random and change strategy based on their / others' success
+
+equilibria in game theory,"individuals act and learn, evolves into a sort of ___"
+
+equilibria in new economy models,chaotic evolution but fluctuations keep it stable,cycles and flucgtuations emerge from interaction and mutation in individual behavior,no exogenous shocks or rep agents,conceptually different from artificial agent
+
+definition of new equilibria,"distribution of states and time spent in each, rather than a single state"
+
+lewbel's critique,like looking for keys lost in the dark under a lamp because it is easier,rep agent is not legit but simplifies macro work and thought so unlikely to be abandoned
+
+vision of the real economy,agents in direct contact with limited number of other agents,graphlike relation of communication between agents,study how local phenomena affect the economy,"governs trading, coalitions, changing preferences"
+

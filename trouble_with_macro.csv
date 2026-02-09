@@ -1,0 +1,56 @@
+problem with macroeconomics,regression over past 3 decades,"identification problem, simultaneous equations, and causality",incredible assumptions and absurd conclusions
+Volcker Deflation,Volcker raises the real Fed funds rates to decrease inflation,"inflation and output fell sharply, unemployment rose",monetary policy is proved important and to have real consequences
+monetary base,currency,bank reserves
+how do people change the monetary base?,buy and sell securities
+RBC Models,delta %A = delta%Y - delta%X,Real Business Cycle
+delta %A,change in percent of growth accounting residual,measure of our ignorance,phlogiston (difference in output and input growth rate)
+delta %Y,growth percentage of output Y
+delta %X,growth percentage of inputs in production X
+RBC second equation,v = YP / M,P = price level,M = money aggregate,Y = output
+v = YP / M,shows that Y does not change if M changes,"P simply adjusts proportionately, so monetary policy doesn't matter",recessions are an exogenous decrease in phlogiston
+negative phlogiston shocks,"macroecon relies on  these imaginary, external shocks"
+macroecon defense of phlogiston,"all models are false, so all objections don't matter","the more significant the theory, the more unrealistic the expectations"
+DGSE Extension to RBC Core,macroeconomic aggregate fluctuates in absence of any decision,so economists invent more imaginary forces
+phlogiston,increases quantity of consumption goods produced by given inputs
+investment-specific phlogiston,increases quantity of capital goods produced by given inputs
+troll,makes random changes to wages of all workers,gremlin
+gremlin,makes random changes to price of output
+aether,increases risk preference of investors
+caloric,workers want less leisure time
+measurement of forces,"no direct way to measure, so they are sensitive to mismeasurement"
+sticky prices,macroecon includes this just in case monetary policy does matter,allwos monetary policy to affect output but rarely does
+identification problem,feed in FWUTV to model to get desired results
+FWUTV,facts with unknown truth value
+2 methods of FWUTV,calibrating values of certain parameters,tight Bayesian priors
+tight Bayesian priors,strong assumptions to force the model to produce certain results
+SW Model,Smet and Wouters Model,claim that monetary shocks don't affect ouptut / deflation despite Volcker
+what does the SW model blame instead?,"demand shocks (investors, technology)","medium to long term shocks (technology, wages, leisure)",inflation caused by wages and output prices,blame caloric shocks for changing household preferences when questioned about inflation
+economy and string theory,self confidence,monolithic community,religious/political fervor in group identification,boundary between group and other experts,disregard for others' ideas / works,"refuse to accept wrongness, exaggeration, optimism",don't understand that research involves risks
+research fields,"pursuit of truth (math, sci, tech)"
+belief fields,"authorities coordinate group efforts (religious, political)"
+pseudoscience,special type of belief field passed off as science
+few talented researchers,"causes people to admire and obey these leaders, disregarding facts and evidence"
+way to avoid pseudoscience,hold leaders and well known researchers to the higheset standards of scientific conduct
+meta model of Romer,"Romer is an anomaly due to either different preferences, prices, or infosets",all scientists have the same info set,all economists want professionalism
+what is different about romer?,different price to pay,doesnt care about getting published since he is no longer an academic,now a practitioner
+norms of macroecon,not criticizing authority figures,error no longer challenged,deference to authority,self sacrifice to defend purity of the sacred
+reason for macroecon norms,"power imbalance with many more PHD to tenured professionals, so it is hard to challenge"
+identification of supply and demand (bad),use two different FWUTVs means you get 2 different results
+m2 scaling problem,X = Sx + C + E,S is a matrix of coefficients showing how they affect one another (not themselves),C is a constant,E is error terms,X is a vector of observations on m variables
+Parameters of S,m(m-1) due to empty diagonal
+parameters of c,m
+total parameters,m2
+parameter problem,only m equations to solve for m2 variables,"additional information has to be specified for m2-m variables, using assumptions",this cant be learned from the data
+adding expectations,rational expectations add twice as many parameters wwhich cant be calculated
+natural experiments,"medical researchers treat diseases using natural experiments, since the simultaneous equations would have interconnected variables"
+milton friedman and anna schwartz,took the natural experiment approach to monetary policy during the Great Depression
+supply and demand with labor elasticity (good),use historical data from 2 adjacent periods and pick 2 meaningful data points,small amounts of meaningful data with high error > loads of data with low error
+identification by assumption,feed more FWUTVs in as m2 assumptions
+identification by deduction,"proposed by Lucas, use mathematical reasoning",but math does not establish the truth value of a fact,this just buries the FWUTV under complex math opacity
+where are fwutv's hidden?,distributional assumptions,properties of madeup variables
+identification by obfuscation,the calculator software manual asks to enter priors to identify parameters and prevent errors,calibration and using Bayesian priors
+loyalty corroding science,self interest threatens science as well as collusion among individuals,loyalty to friends > science
+lucas supports sargent,lucas goes back on past openness to monetary policy's role in economy,lucas supports prescott that monetary policy has very little effects and it is 84% phlogiston shocks causing instability
+sargent supports lucas,sargent portrays lucas's paper's mistakes in a flattering light,"lucas: high frequency variation, which he removed, may cause the model to fail on monetary  policy","lucas: high frequency variation, which he removed, may cause his quantity theory of money model to fail","sargent: post Volcker deflation, claims lucas knew that a shift in monetary policy would make the quantity theory fail"
+romer agrees with lucas and sargent,must solve problem of identification before giving economic advice
+Lucas's standards of econ failure,based on loss in worldwide output,GFC 2009 worse than Keynesian failures,post real macro is deeply flawed and lucas's criticisms apply to his own science
