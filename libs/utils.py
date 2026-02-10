@@ -189,6 +189,7 @@ def print_select_all(options_dict: dict[int, str]):
     for key in options_dict:
         print(f"{key}: {options_dict[key]}")
 
+
 def print_comma_separated_values(list_to_print):
     """
     Prints the items in a list with commas and spaces separating them, other than last item.
@@ -478,7 +479,3 @@ def ask_to_read_score():
             read_all_scores(study_set_name)
             input("Press any key to continue / return to the main menu...")
             break
-    
-
-
-        

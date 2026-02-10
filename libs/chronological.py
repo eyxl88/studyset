@@ -60,12 +60,14 @@ def check_chron_answer(user_answer, answer):
     if user_answer == "q":
         return None
     
-    # Split user answer into a list by comma and remove empty values, capitalizing letters.
+    # Split user answer into a list by comma.
     user_answer = user_answer.split(",")
-
+    
+    # Remove blank entries from the list.
     while "" in user_answer:
         user_answer.remove("")
-
+    
+    # Capitalize each word in user_answer
     for i in range(len(user_answer)):
         user_answer[i] = user_answer[i].strip().upper()
 
@@ -74,7 +76,7 @@ def check_chron_answer(user_answer, answer):
         print("Correct.\n")
         return 1
 
-    if user_answer != answer:
+    elif user_answer != answer:
         print("Incorrect. The correct order was: ", end="")
         utils.print_comma_separated_values(answer)
         print()
