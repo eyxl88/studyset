@@ -207,9 +207,11 @@ def write_mode(study_dict, study_set_name):
     TOTAL_POINTS = len(study_dict)
     
     for i in range(len(study_dict)):
+        # Clear console
+        utils.clear_console()
         
         # Prints word bank and chooses the key term, removing from list of terms to test.
-        utils.print_keys(study_dict)
+        utils.print_keys(list_of_keys)
         print()
         key_term = random.choice(list_of_keys)
         list_of_keys.remove(key_term)
@@ -310,6 +312,9 @@ def select_all(study_dict, study_set_name):
     user_correct = 0
     list_of_keys = list(study_dict.keys())
 
+    # Clear console
+    utils.clear_console()
+
     for i in range(len(study_dict)):
         # Selects key term and prints question header.
         key_term = random.choice(list_of_keys)
@@ -319,7 +324,7 @@ def select_all(study_dict, study_set_name):
         list_of_keys.remove(key_term)
         answer = study_dict[key_term]
         options_dict = utils.create_select_all(answer, study_dict.values())
-
+        
         utils.print_select_all(options_dict)
         print()
         
@@ -334,6 +339,11 @@ def select_all(study_dict, study_set_name):
             try:
                 user_correct += check.check_select_all_answer(user_answer, 
                                                     answer, options_dict)
+                
+                # Let user know their answer and then clean the console
+                input()
+                utils.clear_console()
+
                 break
             except:
                 print("Invalid input. Try again.")
