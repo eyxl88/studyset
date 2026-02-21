@@ -11,7 +11,7 @@ from libs.utils import check_file_loaded
 # Global Constants
 NEWEST_DICT: dict[Any, Any] = {}
 ACCEPTED_USER_INPUTS: list[str] = ['exit', 'c', 's', 'r', 'mcqdef', 
-                        'mcqkey', 'selectall', 'selectall', 
+                        'mcqkey', 'selectall',
                         'w', 'm', 'fc', 'chr', 'readscore']
 
 # Main program loop
