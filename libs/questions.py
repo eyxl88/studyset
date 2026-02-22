@@ -57,11 +57,15 @@ def multiple_choice(study_dict: dict[str, list[str]], study_set_name):
     TOTAL_POINTS = len(study_dict)
     list_of_keys = list(study_dict.keys())
     user_correct = 0
+    number_of_questions = len(study_dict)
     
     for i in range(len(study_dict)):
+        # Clear console
+        utils.clear_console()
+
         # Prints question header and chooses a key term.
         key_term = random.choice(list_of_keys)
-        print("Question", i + 1, key_term)
+        print(f"Question {i + 1} out of {number_of_questions} - {key_term} \n")
 
         # Removes the chosen key term, finds the correct answer, and creates a question.
         list_of_keys.remove(key_term)
@@ -72,7 +76,7 @@ def multiple_choice(study_dict: dict[str, list[str]], study_set_name):
         utils.print_from_options_dict(options_dict)
         
         while True:
-            user_answer = input("What is the correct answer? Enter A, B, C, D, or E: ")
+            user_answer = input("\nWhat is the correct answer? Enter A, B, C, D, or E: ")
             
             # Allows user to return to main menu.
             if user_answer == "q":
@@ -81,6 +85,7 @@ def multiple_choice(study_dict: dict[str, list[str]], study_set_name):
             try:
                 output = check.check_answer(user_answer, answer, options_dict)
                 user_correct += output
+                utils.pause_input()
                 break
 
             except:
@@ -109,18 +114,25 @@ def multiple_choice_flipped(study_dict: dict[str, list[str]], study_set_name):
     list_of_values = list(study_dict.values())
     TOTAL_POINTS = len(study_dict)
     user_correct = 0
+    number_of_question = len(study_dict)
     
     for i in range(len(study_dict)):
+
+        # Clear console
+        utils.clear_console()
 
         # Create question and remove from list.
         definition = random.choice(list_of_values)
         list_of_values.remove(definition)
         
         # Print question.
-        print("Question", i + 1)
+        print(f"Question {i + 1} out of {number_of_question}")
         for row in definition:
             print(row)
-        
+        else:
+            # Add extra space
+            print()
+
         # Set up answer and options.
         answer = utils.get_dict_key(study_dict, definition)
         options_dict = create_options(answer, study_dict.keys())
@@ -128,7 +140,7 @@ def multiple_choice_flipped(study_dict: dict[str, list[str]], study_set_name):
 
         while True:
             # Get and check user answer.
-            user_answer = input("What is the correct answer? Enter A, B, C, D, or E: ")
+            user_answer = input("\nWhat is the correct answer? Enter A, B, C, D, or E: ")
                 
             # Allow user to exit mcqkey mode by entering "q" at any time.
             if user_answer == "q":
@@ -136,6 +148,7 @@ def multiple_choice_flipped(study_dict: dict[str, list[str]], study_set_name):
                 
             try:
                 question_score = check.check_answer_one_phrase(user_answer, answer, options_dict)
+                utils.pause_input()
                 break
 
             except:
@@ -217,7 +230,7 @@ def write_mode(study_dict, study_set_name):
         list_of_keys.remove(key_term)
         answer = key_term
 
-        print("Question", i + 1, end=" ")
+        print("Question", i + 1, "out of", len(study_dict), end=" - ")
 
         # Prints the definition neatly on multiple lines if necessary.
         for i in range(len(study_dict[key_term])):
@@ -235,7 +248,7 @@ def write_mode(study_dict, study_set_name):
             
             try:
                 user_correct += check.check_written_answer(user_answer, answer)
-                input("\nPress any key to move to the next question... ")
+                utils.pause_input()
                 break
             
             except:
@@ -311,6 +324,8 @@ def select_all(study_dict, study_set_name):
     TOTAL = len(study_dict)
     user_correct = 0
     list_of_keys = list(study_dict.keys())
+    is_correct_answer_shown = input("Would you like to see the number of correct answers in each question? (y/n): ")
+    is_correct_answer_shown = is_correct_answer_shown == "y"
 
     # Clear console
     utils.clear_console()
@@ -318,12 +333,12 @@ def select_all(study_dict, study_set_name):
     for i in range(len(study_dict)):
         # Selects key term and prints question header.
         key_term = random.choice(list_of_keys)
-        print("Question", i + 1, key_term)
+        print("Question", i + 1, "out of", len(study_dict), " - ", key_term)
 
         # Removes key term from list, finds answer, creates and prints options.
         list_of_keys.remove(key_term)
         answer = study_dict[key_term]
-        options_dict = utils.create_select_all(answer, study_dict.values())
+        options_dict = utils.create_select_all(answer, study_dict.values(), is_correct_answer_shown)
         
         utils.print_select_all(options_dict)
         print()
@@ -341,7 +356,7 @@ def select_all(study_dict, study_set_name):
                                                     answer, options_dict)
                 
                 # Let user know their answer and then clean the console
-                input()
+                utils.pause_input()
                 utils.clear_console()
 
                 break

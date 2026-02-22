@@ -19,15 +19,14 @@ def main():
     """
     Main program file. Starts the program loop.
     """
+    is_file_loaded = False
+    study_set_name = ""
 
     # Sets up the main menu
     utils.clear_console()
     utils.print_menu()
 
-    is_file_loaded = False
-    study_set_name = ""
-
-    user_input = input()
+    user_input = input("\nSelect one option: ")
     while user_input != 'exit':
         if user_input in ACCEPTED_USER_INPUTS:
 
@@ -40,8 +39,9 @@ def main():
 
             elif user_input == 'r':
                 NEWEST_DICT, study_set_name = utils.read_data_from_csv()
-                if len(NEWEST_DICT) != 0:
-                    is_file_loaded = True
+                if NEWEST_DICT != None:
+                    if len(NEWEST_DICT) != 0:
+                        is_file_loaded = True
 
             elif user_input == 'mcqdef' and check_file_loaded(is_file_loaded):
                 multiple_choice(NEWEST_DICT, study_set_name)
@@ -74,8 +74,12 @@ def main():
 
         # Re-print the menu
         utils.clear_console()
-        utils.print_menu()
-        user_input = input()
+        if is_file_loaded:
+            utils.print_menu(study_set_name.split("\\")[-1]) # Get last item when spliting abs path
+        else:
+            utils.print_menu()
+            
+        user_input = input("\nSelect one option: ")
 
     else:
         # After quitting the program. Clean the console.

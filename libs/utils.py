@@ -12,21 +12,28 @@ ACCEPTED_STUDY_MODE_LIST = ["mcqdef", "mcqkey", "write", "match", "selectall", "
 
 # ==================================== Create ====================================
 
-def create_select_all(answer, study_dict_view_object):
+def create_select_all(answer, study_dict_view_object, is_correct_answer_shown = False):
     """
     Takes all possible answers to create a dictionary of select all \
         options with wrong and right answers.
     """
+    if is_correct_answer_shown:
+        print(f"There are {len(answer)} correct answer(s)\n")
+
     study_dict_choices = [item for item in study_dict_view_object]
     study_dict_choices.remove(answer)
     select_all_choices = []
+    number_of_choices = random.randint(-2, 4) + 6
 
     for list in study_dict_choices:
         for item in list:
             select_all_choices.append(item)
 
+    # Select questions for user
     random.shuffle(select_all_choices)
-    select_all_choices = select_all_choices[:6]
+    select_all_choices = select_all_choices[:number_of_choices]
+
+    # Add back correct answer
     select_all_choices.extend(answer)
     random.shuffle(select_all_choices)
     select_all_options_dict = {}
@@ -104,8 +111,10 @@ def read_data_from_csv():
                     dict_read_from_csv[key] = definition
 
     except:
-        print("File not found. Try again by pressing 'r' after the main menu prints. \
-              Use a valid file name.")
+        print("File not found. Try again by pressing 'r' after the main menu prints." \
+              " Use a valid file name.")
+        pause_input()
+        dict_read_from_csv, study_set_name = None, None
         
     return dict_read_from_csv, study_set_name
 
@@ -223,7 +232,16 @@ def clear_console():
     except Exception as e:
         print(f"Error clearing console: {e}")
 
-def print_menu():
+def print_menu(file_name = ""):
+    print("Welcome to Study Set!")
+    print("By Emily Lim. 2026.")
+    print("=" * 50, "\n")
+
+    if (file_name != ""):
+        print(f"File loaded: {file_name}\n")
+    print("Program options:\n")
+
+
     print("Press 'c' to create a study set.")
     print("Press 's' to save a created study set to a csv file.")
     print("Press 'r' to read a study set from a csv file.")
@@ -283,6 +301,10 @@ def check_file_loaded(is_file_loaded,
         input("Press any key to continue...")
 
     return is_file_loaded
+
+def pause_input(msg="\nPress any key to continue..."):
+    """Pause the program to ask by using an input, can use different messages."""
+    input(msg)
 
 # ==================================== Score Saving ====================================
 
