@@ -3,6 +3,7 @@ import libs.utils as utils
 from libs.chronological import chronological
 from libs.questions import multiple_choice, multiple_choice_flipped, flashcard, write_mode, match_answers, select_all
 from libs.utils import check_file_loaded
+import os
 
 # Check files files inside ./libs folder for all the code that was once here.
 # If you need help finding everything, let me know!
@@ -35,10 +36,12 @@ def main():
                 is_file_loaded = True
 
             elif user_input == 's' and check_file_loaded(is_file_loaded):
-                study_set_name = utils.save_data_to_csv(NEWEST_DICT)
+                study_set_name, file_name = utils.save_data_to_csv(NEWEST_DICT)
+                NEWEST_DICT = utils.read_data_from_csv(os.path.join("test_files", file_name.split(os.path.sep)[-1]))[0] # TUPLE SLICED!
 
             elif user_input == 'r':
-                NEWEST_DICT, study_set_name = utils.read_data_from_csv()
+                file_name = input("Input name of csv to read with extension: ")
+                NEWEST_DICT, study_set_name = utils.read_data_from_csv(file_name)
                 if NEWEST_DICT != None:
                     if len(NEWEST_DICT) != 0:
                         is_file_loaded = True
@@ -75,10 +78,10 @@ def main():
         # Re-print the menu
         utils.clear_console()
         if is_file_loaded:
-            utils.print_menu(study_set_name.split("\\")[-1]) # Get last item when spliting abs path
+            utils.print_menu(study_set_name.split(os.path.sep)[-1]) # Get last item when spliting abs path
         else:
             utils.print_menu()
-            
+
         user_input = input("\nSelect one option: ")
 
     else:

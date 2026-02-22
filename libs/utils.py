@@ -69,6 +69,7 @@ def save_data_to_csv(entry_dict: dict[str, list[str]]):
     
     """
     name = input("Enter name of csv file to save: ")
+    file_path = ""
     
     # Save study set name to variable and prepare file name for reading.
     if not(name.endswith(".csv")):
@@ -77,8 +78,10 @@ def save_data_to_csv(entry_dict: dict[str, list[str]]):
     else:
         study_set_name = name[:-4] # Remove .csv extension from name
 
+    name = os.path.join("test_files", name)
     with open(name, "a+") as csv_file:
         csv_writer = csv.writer(csv_file)
+        file_path = os.path.abspath(name)
         print(os.path.abspath(name))
         
         # Write each row to the csv file.
@@ -88,11 +91,10 @@ def save_data_to_csv(entry_dict: dict[str, list[str]]):
             csv_writer.writerow(list_to_write)
 
     input("Your file has been saved. Press any key to contine...")
-    return study_set_name
+    return study_set_name, file_path
 
-def read_data_from_csv():
+def read_data_from_csv(csv_to_read):
     """Takes csv file and reads csv file into test-ready dictionary."""
-    csv_to_read = input("Input name of csv to read with extension: ")
     csv_to_read = os.path.abspath(csv_to_read)
     study_set_name = csv_to_read[:-4] # Remove .csv extension
     dict_read_from_csv = {}
@@ -233,18 +235,16 @@ def clear_console():
         print(f"Error clearing console: {e}")
 
 def print_menu(file_name = ""):
+    NUMBER_OF_LINES = 50
+
     print("Welcome to Study Set!")
     print("By Emily Lim. 2026.")
-    print("=" * 50, "\n")
+    print("=" * NUMBER_OF_LINES, "\n")
 
     if (file_name != ""):
         print(f"File loaded: {file_name}\n")
     print("Program options:\n")
 
-
-    print("Press 'c' to create a study set.")
-    print("Press 's' to save a created study set to a csv file.")
-    print("Press 'r' to read a study set from a csv file.")
     print("Press 'mcqdef' to be quizzed with mcq questions with definitions as answers.")
     print("Press 'mcqkey' to be quizzed with MCQ questions with key terms as answers.")
     print("Press 'selectall' to be quizzed with Select All questions (definitions as answers).")
@@ -253,6 +253,13 @@ def print_menu(file_name = ""):
     print("Press 'fc' for flashcard mode of studying.")
     print("Press 'chr' to be quizzed with ordering questions on key terms.")
     print("Press 'readscore' to see your saved scores.")
+
+    print("\nSettings")
+    print("=" * NUMBER_OF_LINES, "\n")
+    print("Press 'c' to create a study set.")
+    print("Press 's' to save a created study set to a csv file.")
+    print("Press 'r' to read a study set from a csv file.")
+
     print("Press 'exit' to quit.")
 
 #=============================== Study Set Creation =======================================

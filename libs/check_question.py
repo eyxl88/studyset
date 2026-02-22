@@ -134,8 +134,11 @@ def check_select_all_answer(user_answer, answer, options_dict):
             user_correct_answers.append(num)
 
         else:
-            user_incorrect_answers.append(num)
+            user_incorrect_answers.append(f"{num} - {options_dict[num]}")
     
+    # Make answer more printable.
+    answer = [f"{utils.get_dict_key(options_dict, item)} - {item}" for item in answer]
+
     # If the user selects all correct answers.
     if user_total == correct_total and len(user_incorrect_answers) == 0:
         print(f"Correct! You selected {user_total}/{correct_total} correct answers"\
@@ -155,8 +158,11 @@ def check_select_all_answer(user_answer, answer, options_dict):
     elif user_total != correct_total and len(user_incorrect_answers) != 0:
         print(f"Incorrect. You selected {user_total}/{correct_total} correct answers"\
               f" and {len(user_incorrect_answers)} wrong answers!")
-        print(f"The correct answers included:\n{"\n".join(answer)}")
-        print(f"You additionally selected these wrong answers:")
+        
+        print(f"\nThe correct answers included:\n{"\n".join(answer)}\n")
+        #=utils.print_comma_separated_values(user_correct_answers)
+
+        print(f"\nYou additionally selected these wrong answers:")
         utils.print_comma_separated_values(user_incorrect_answers) 
         print()
 
