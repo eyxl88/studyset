@@ -5,3 +5,11 @@
 # misc
 *.DS_Store
 *.pem
+
+# Random files
+test.py
+Untitled*.py
+
+# Ignore txt, csv
+*.txt
+*.csv
