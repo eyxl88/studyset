@@ -110,13 +110,16 @@ def check_select_all_answer(user_answer, answer, options_dict):
     """
     
     # Turn user answer string into user answer list.
+    if user_answer.endswith(","):
+        user_answer = user_answer[:-1] # Fix ending comma breakpoint.
     if "," in user_answer:
         user_answer = user_answer.split(",")
     else:
-        user_answer = list(user_answer)
+        user_answer = [user_answer] # Make single item into a list.
 
     # Remove blank entries from the user answer list.
     user_answer = [int(i) for i in user_answer if i.isspace() != True]
+    user_answer = list(set(user_answer)) # Remove duplicates.
     user_answer.sort()
 
     # Initialize tracking variables.
@@ -136,6 +139,10 @@ def check_select_all_answer(user_answer, answer, options_dict):
         else:
             user_incorrect_answers.append(f"{num} - {options_dict[num]}")
     
+    # Remove duplicate incorrect answers.
+    if len(user_incorrect_answers) > 1:
+        user_incorrect_answers = list(set(user_incorrect_answers))
+
     # Make answer more printable.
     answer = [f"{utils.get_dict_key(options_dict, item)} - {item}" for item in answer]
 
