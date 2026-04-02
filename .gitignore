@@ -5,6 +5,7 @@
 # misc
 *.DS_Store
 *.pem
+.vscode/
 
 # Random files
 test.py
@@ -13,3 +14,6 @@ Untitled*.py
 # Ignore txt, csv
 *.txt
 *.csv
+
+# Ignore pdf files in pdf directory
+pdfs/*.pdf

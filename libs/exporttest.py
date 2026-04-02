@@ -229,8 +229,8 @@ def create_save_test(test_lines, answer_lines):
     # Create filepaths.
     test_filename = filename + "_test.pdf"
     answer_filename = filename + "_answers.pdf"
-    test_filepath = os.path.join(os.path.abspath("test_files"), test_filename)
-    answer_filepath = os.path.join(os.path.abspath("test_files"), answer_filename)
+    test_filepath = os.path.join(os.path.abspath("pdfs"), test_filename)
+    answer_filepath = os.path.join(os.path.abspath("pdfs"), answer_filename)
 
     create_pdf(test_filepath, test_lines)
     build_answer_sheet(answer_filepath, answer_lines)

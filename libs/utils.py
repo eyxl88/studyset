@@ -114,7 +114,7 @@ def save_data_to_csv(entry_dict: dict[str, list[str]]):
     else:
         study_set_name = name[:-4] # Remove .csv extension from name
 
-    name = os.path.join("test_files", name)
+    name = os.path.join("user_data", name)
     with open(name, "a+") as csv_file:
         csv_writer = csv.writer(csv_file)
         file_path = os.path.abspath(name)
@@ -503,7 +503,7 @@ def save_score(study_set_name, section, score):
     
     # Find / create filename for the scores file of this study mode.
     section = study_set_name + "_" + section + "_scores.txt"
-    section = os.path.join("test_files", section)
+    section = os.path.join("user_data", section)
     section = os.path.abspath(section)
 
     # Create / open file and read contents to update (if any).
@@ -542,7 +542,7 @@ def read_score(study_set_name, study_mode):
 
     try:
         filepath = study_set_name + "_" + study_mode + "_scores.txt"
-        filepath = os.path.join("test_files", filepath)
+        filepath = os.path.join("user_data", filepath)
         filepath = os.path.abspath(filepath)
         
         with open(filepath, "r") as score_file:
@@ -560,7 +560,7 @@ def read_all_scores(study_set_name):
     for mode in ACCEPTED_STUDY_MODE_LIST:
         # Create filepath for files
         filepath = study_set_name + "_" + mode + "_scores.txt"
-        filepath = os.path.join("test_files", filepath)
+        filepath = os.path.join("user_data", filepath)
         filepath = os.path.abspath(filepath)
 
         # For modes which have existing score files
