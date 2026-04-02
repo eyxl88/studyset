@@ -114,7 +114,7 @@ def save_data_to_csv(entry_dict: dict[str, list[str]]):
     else:
         study_set_name = name[:-4] # Remove .csv extension from name
 
-    name = os.path.join("user_data", name)
+    name = os.path.join("test_files", name)
     with open(name, "a+") as csv_file:
         csv_writer = csv.writer(csv_file)
         file_path = os.path.abspath(name)
