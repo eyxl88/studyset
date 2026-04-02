@@ -9,6 +9,42 @@ from datetime import datetime
 # ==================================== Constants =================================
 ACCEPTED_READ_SCORE_INPUTS = ["mode", "all", "q"]
 ACCEPTED_STUDY_MODE_LIST = ["mcqdef", "mcqkey", "write", "match", "selectall", "chron"]
+LATEX_DICT = {
+    "pia": f"\pi_a",
+    "pie": f"\pi_e",
+    "pit": f"\pi_t",
+    "pit+1": "\pi_{t+1}",
+    "Etpit+1": "E_t\pi_{t+1}",
+    "Etpit": "E_t\pi_t",
+    "mu": r"\mu",
+    "yt": r"y_t",
+    "Yt": r"Y_t",
+    "Kt": r"K_t",
+    "kt": r"k_t",
+    ">=": r"geq",
+    "<=": r"leq",
+    "!=": r"neq",
+    "AtNt": r"A_t N_t",
+    "Yt+1": r"Y_{t+1}"
+}
+
+LATEX_NON_STRICT = {
+    "kdott": r"\dot{k}_t",
+    "ktalpha": r"k_t^\alpha",
+    "Ktalpha": r"K_t^\alpha",
+    "alpha": r"\alpha",
+    "beta": r"\beta",
+    "rho": r"\rho",
+    "kdot": r"\dot{k}",
+    "ydot": r"\dot{y}",
+    "Kdot": r"\dot{K}",
+    "Ydot": r"\dot{Y}",
+    "Ualpha": r"u^{\alpha}",
+    "U*": r"U^\text{*}",
+    "y*": r"y^\text{*}",
+    "pi0": r"\pi_0",
+    "delta": r"\delta"
+}
 
 # ==================================== Create ====================================
 
@@ -685,3 +721,49 @@ def modify_study_set(study_dict):
     user_save = input("Would you like to save the updated dictionary? (y/n): ")
     if user_save == "y":
         save_data_to_csv(study_dict)
+
+def latexify(string_list):
+    for i in range(len(string_list)):
+        for entry in LATEX_DICT:
+            if entry == string_list[i]:
+                string_list[i] = LATEX_DICT[entry]
+        
+        for entry in LATEX_NON_STRICT:
+            if entry in string_list[i]:
+                string_list[i] = LATEX_NON_STRICT[entry].join(string_list[i].split(entry))
+
+def parse_parenthetical(string):
+    string_list = string.split("(")
+    string_list[1:1] = string_list[1].split(")")
+    string_list[1:1] = string_list[1].split()
+    
+    latexify(string_list)
+    return string_list[0] + "(" + " ".join(string_list[1:-1]) + ")" + string_list[-1]
+
+def handle_parentheses(string_list):
+    """
+    Handles parentheses related issues, parsing the areas around parentheses
+    and within them and recombining these entries for greater ease of use.
+    """
+    new_list = []
+    long_string = ""
+    accumulate = False
+    for i in range(len(string_list)):    
+        if "(" in string_list[i]:
+            accumulate = True
+        
+        if accumulate:
+            long_string += string_list[i]
+        else:
+            new_list.append(string_list[i])
+ 
+        if ")" in string_list[i]:
+            new_list.append(parse_parenthetical(long_string))
+            accumulate = False
+    return new_list
+
+def manage_latexify(string):
+    string_list = handle_parentheses(string.split())
+    latexify(string_list)
+    formatted_string = " ".join(string_list)
+    return formatted_string

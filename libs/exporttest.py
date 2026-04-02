@@ -11,7 +11,7 @@ LETTER_COLORS = {
     "A": colors.green,
     "B": colors.darkblue,
     "C": colors.darkorange,
-    "D": colors.darkorchid,
+    "D": colors.orchid,
     "E": colors.darkred,
 }
 
@@ -19,13 +19,11 @@ def write_words_from_options_dict(options_dict):
     """Prints each key and one-line phrase definition from a given dictionary."""
     test_options = ""
     for key in options_dict:
-        test_options += f"{key}: {options_dict[key]}\n"
+        test_options += f"    {key}: {options_dict[key]}\n"
     return test_options
 
 def get_options_list(answer, study_dict_object):
-    """
-    Creates options list with 4 incorrect options and the given answer.
-    """
+    """Creates options list with 4 incorrect options and the given answer."""
     options_list = [answer]
     incorrect_options = list(study_dict_object)
     incorrect_options.remove(answer)
@@ -99,14 +97,25 @@ def create_pdf(file_path, text_lines):
         width, height = letter
 
         # Set title and font
-        c.setTitle("Generated PDF")
+        c.setTitle("Generated Test")
         c.setFont("Helvetica", 12)
 
         # Starting position for text
         y_position = height - 50
 
         for line in text_lines:
-            c.drawString(50, y_position, line)
+            # c.drawString(50, y_position, line)
+            if line.startswith("Question"):
+                c.setFont("Helvetica-Bold", 12)
+                c.drawString(50, y_position, line)
+            
+            elif "A:" in line or "B:" in line or "C:" in line or "D:" in line or "E:" in line:
+                c.setFont("Helvetica", 10)
+                c.drawString(50, y_position, line)
+
+            else:
+                c.setFont("Helvetica", 12)
+                c.drawString(50, y_position, line)
             y_position -= 20  # Move down for next line
 
             # If page is full, create a new page
@@ -146,12 +155,15 @@ def build_answer_sheet(filepath, data):
     # Style
     style = TableStyle([
         # Header
+        ("ALIGN", (0, 0), (-1, 0), "CENTER"),
         ("BACKGROUND", (0,0), (-1,0), colors.lightseagreen),
         ("TEXTCOLOR", (0,0), (-1,0), colors.black),
         ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
         ("FONTSIZE", (0,0), (-1,0), 14),
 
         # Body text
+        ("ALIGN", (0, 1), (1, -1), "CENTER"),
+        ("ALIGN", (2, 1), (2, -1), "LEFT"),
         ("FONTNAME", (0,1), (-1,-1), "Helvetica"),
         ("FONTSIZE", (0,1), (-1,-1), 10),
         ("VALIGN", (0,0), (-1,-1), "TOP"),
