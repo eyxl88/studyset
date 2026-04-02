@@ -1,6 +1,7 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import os, random
+import libs.chronological as chrono
 import utils
 
 ACCEPTED_QUESTION_MODES = ["selectall", "chr", "w", "m", ""]
@@ -12,11 +13,16 @@ def write_words_from_options_dict(options_dict):
         test_options += f"{key}: {options_dict[key]}\n"
     return test_options
 
-def mcqdef_test(study_dict):
+def mcqkey_test(study_dict):
     """
-    Docstring for mcqdef_test
+    Creates a full set of randomized MCQ questions and the answer key.
     
-    :param study_dict: Description
+    Parameters:
+        study_dict (dict[str, list[str]]): dictionary containing key terms and definitions as values.
+    
+    Returns:
+        test_lines (str): a string containing all test questions and options, formatted.
+        answer_key (str): the correct answers to each question.
     """
     list_of_values = study_dict.values()
     test_lines = ""
@@ -29,22 +35,24 @@ def mcqdef_test(study_dict):
         list_of_values.remove(definition)
         
         # Add question and options to test material.
-        test_lines += f"Question {i + 1}\n"
-        answer_key += f"Question {i + 1}: "
+        test_lines += f"Question {i + 1} out of {len(study_dict)}:\n"
+        answer_key += f"Question {i + 1} out of {len(study_dict)}: "
 
         for row in definition:
             test_lines += f"{row}\n"
         
         # Set up answer and options.
         answer = utils.get_dict_key(study_dict, definition)
-        answer_key += str(answer)
         
-        options_dict = utils.create_options(answer, study_dict.keys())
+        options_list = [answer]
+        options_list.extend(study_dict.keys())
+        options_dict = chrono.create_chronological(answer)
         test_lines += write_words_from_options_dict(options_dict)
         test_lines += "_" * 79 + "\n"
-        
+
         answer_letter = utils.get_dict_key(options_dict, definition)
         answer_key += str(answer_letter) + "\n"
+        answer_key += str(answer) + "\n"
     
     return test_lines, answer_key
 
@@ -86,27 +94,63 @@ def create_pdf(file_path, text_lines):
     except Exception as e:
         print(f"Error creating PDF: {e}")
 
-pdf_name = input("Enter name of pdf to be saved without extension: ") + ".pdf"
-question_types = input("Would you like to see 1 type of question or multiple?\n"\
-                      "Enter '1' for 1 type or 'm' for multiple: ")
-
-if question_types == "1":
+def get_question_type():
     question_call = ""
     time = 0
-    
+
     while question_call not in ACCEPTED_QUESTION_MODES:
-        question_call = input("Enter the mode of question to be created (mcqdef, mcqkey,\n" \
-        "selectall, m, chron, or w: ")
-        
         if time > 1:
             print("Invalid question mode. Try again.")
+            
+        question_call = input("Enter the mode of question to be created (mcqdef, mcqkey,\n" \
+            "selectall, m, chron, or w: ").strip().lower()
         
         time += 1
     
+    return question_call
+
+def create_mcqkey_test(study_dict):
+    # Get text to write.
+    test_lines, answer_lines = mcqkey_test(study_dict)
+    test_lines = test_lines.split("\n")
+    answer_lines = answer_lines.split("\n")
+    create_save_test(test_lines, answer_lines)
+
+def create_save_test(test_lines, answer_lines):
+
+    # Get and process user input on filename.
+    user_input = input("Enter name for this test without extension: ")
+    filename = ""
+    for letter in user_input.strip():
+        if letter == " ":
+            filename += "_"
+        if letter.isalpha():
+            filename += letter
+        if letter == ".":
+            break
+    
+    # Create filepaths.
+    test_filename = filename + "_test.pdf"
+    answer_filename = filename + "_answers.pdf"
+    test_filepath = os.path.join(os.path.abspath("test_files"), test_filename)
+    answer_filepath = os.path.join(os.path.abspath("test_files"), answer_filename)
+
+    create_pdf(test_filepath, test_lines)
+    create_pdf(answer_filepath, answer_lines)
+    print("Test and answer keys created successfully.")
+    print("Test at", test_filepath)
+    print("Answer key at", answer_filepath)
+    input("Press any key to return to the main menu... ")
+
+def manage_single_question(study_dict):
+    question_call = get_question_type()
+               
     if question_call == "mcqdef":
         pass
+
     elif question_call == "mcqkey":
-        pass
+        create_mcqkey_test(study_dict)
+
     elif question_call == "m":
         pass
     elif question_call == "w":
@@ -116,6 +160,16 @@ if question_types == "1":
     elif question_call == "chr":
         pass
 
-lines = [
-]
-create_pdf(pdf_name, lines)
+def manage_multi_question(study_dict):
+    pass
+
+def initialize_pdf(study_dict):
+    question_types = input("Would you like to see 1 type of question or multiple?\n"\
+                        "Enter '1' for 1 type or 'm' for multiple: ")
+
+    if question_types == "1":
+        manage_single_question(study_dict)
+    
+    elif question_types == "m":
+        manage_multi_question(study_dict)
+        
