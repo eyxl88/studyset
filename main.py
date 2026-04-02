@@ -3,6 +3,7 @@ import libs.utils as utils
 from libs.chronological import chronological
 from libs.questions import multiple_choice, multiple_choice_flipped, flashcard, write_mode, match_answers, select_all
 from libs.utils import check_file_loaded
+from libs.exporttest import initialize_pdf
 import os
 
 # Check files files inside ./libs folder for all the code that was once here.
@@ -12,7 +13,7 @@ import os
 # Global Constants
 NEWEST_DICT: dict[Any, Any] = {}
 ACCEPTED_USER_INPUTS: list[str] = ['exit', 'c', 's', 'r', 'mcqdef', 
-                        'mcqkey', 'selectall', 'e',
+                        'mcqkey', 'selectall', 'e', 'pdf',
                         'w', 'm', 'fc', 'chr', 'readscore']
 
 # Main program loop
@@ -72,6 +73,9 @@ def main():
 
             elif user_input == "readscore":
                 utils.ask_to_read_score()
+            
+            elif user_input == "pdf" and check_file_loaded(is_file_loaded):
+                initialize_pdf(NEWEST_DICT)
         
         else:
             # User input is not valid.

@@ -260,6 +260,7 @@ def print_menu(file_name = ""):
     print("Press 's' to save a created study set to a csv file.")
     print("Press 'e' to edit a study set you have loaded.")
     print("Press 'r' to read a study set from a csv file.")
+    print("Enter 'pdf' to print a test to pdf from  study set.")
 
     print("Press 'exit' to quit.")
 
