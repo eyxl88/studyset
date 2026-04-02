@@ -3,17 +3,16 @@ from reportlab.pdfgen import canvas
 import os, random
 import libs.chronological as chrono
 import libs.utils as utils
-from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
 
 ACCEPTED_QUESTION_MODES = ["selectall", "chron", "w", "m", "mcqdef", "mcqkey"]
 LETTER_COLORS = {
     "A": colors.green,
-    "B": colors.blue,
-    "C": colors.orange,
-    "D": colors.purple,
-    "E": colors.red,
+    "B": colors.darkblue,
+    "C": colors.darkorange,
+    "D": colors.darkorchid,
+    "E": colors.darkred,
 }
 
 def write_words_from_options_dict(options_dict):
@@ -132,7 +131,7 @@ def build_answer_sheet(filepath, data):
         number, answer letter, and written answer.
     """
 
-    pdf = SimpleDocTemplate(filepath, pagesize=letter)
+    pdf = SimpleDocTemplate(filepath, pagesize = letter)
 
     # Header row
     table_data = [["Q#", "Ans", "Written Answer"]]
@@ -150,7 +149,7 @@ def build_answer_sheet(filepath, data):
         ("BACKGROUND", (0,0), (-1,0), colors.lightseagreen),
         ("TEXTCOLOR", (0,0), (-1,0), colors.black),
         ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
-        ("FONTSIZE", (0,0), (-1,0), 12),
+        ("FONTSIZE", (0,0), (-1,0), 14),
 
         # Body text
         ("FONTNAME", (0,1), (-1,-1), "Helvetica"),
@@ -174,24 +173,23 @@ def build_answer_sheet(filepath, data):
     
     # Color‑code the answer column
     for i in range(1, len(table_data)):
-        letter = str(table_data[i][1]).strip().upper()
-        if letter in LETTER_COLORS:
-            style.add("TEXTCOLOR", (1, i), (1, i), LETTER_COLORS[letter])
+        ans_letter = str(table_data[i][1]).strip().upper()
+        if ans_letter in LETTER_COLORS:
+            style.add("TEXTCOLOR", (1, i), (1, i), LETTER_COLORS[ans_letter])
             style.add("FONTNAME", (1, i), (1, i), "Helvetica-Bold")
+    
     table.setStyle(style)
-
     pdf.build([table])
 
 def get_question_type():
     question_call = ""
     time = 0
-    input("outside loop")
     while question_call not in ACCEPTED_QUESTION_MODES:
         if time > 1:
             print("Invalid question mode. Try again.")
             
-        question_call = input("Enter the mode of question to be created (mcqdef, mcqkey,\n" \
-            "selectall, m, chron, or w: ").strip().lower()
+        question_call = input("Enter the mode of question to be created (mcqdef, mcqkey, " \
+            "selectall, m, chron, or w): ").strip().lower()
         
         time += 1
     
@@ -229,7 +227,6 @@ def create_save_test(test_lines, answer_lines):
 
 def manage_single_question(study_dict):
     question_call = get_question_type()
-    input("Post question call")
                
     if question_call == "mcqdef":
         pass
