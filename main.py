@@ -5,6 +5,7 @@ from libs.questions import multiple_choice, multiple_choice_flipped, flashcard, 
 from libs.utils import check_file_loaded
 from libs.exporttest import initialize_pdf
 import os
+import pickle
 
 # Check files files inside ./libs folder for all the code that was once here.
 # If you need help finding everything, let me know!
@@ -95,5 +96,13 @@ def main():
         # After quitting the program. Clean the console.
         utils.clear_console()
 
+
 # Initialize the program
-main()
+try:
+    main()
+
+except:
+    utils.save_data_to_csv(NEWEST_DICT)
+    pickle.dump(NEWEST_DICT, os.path.abspath(os.path.join("test_files", "backup.pkl")))
+    print("An exception has occurred...Restarting main...")
+    main()

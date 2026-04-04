@@ -690,6 +690,11 @@ def modify_term(index, study_dict):
         # except:
         #     print("Invalid term index. Please enter a valid number.")
 
+# Implement adding definitions
+# Implement reprinting of the terms available to edit (fixes the last delete bugs)
+# Ensure all excepts have new input methods
+# Implement clearing
+# Implement mandatory saving
 
 def modify_def(index, study_dict):
     """Modifies a specific definition line for a certain term in the dictionary."""
