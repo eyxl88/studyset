@@ -102,7 +102,12 @@ try:
     main()
 
 except:
-    utils.save_data_to_csv(NEWEST_DICT)
-    pickle.dump(NEWEST_DICT, os.path.abspath(os.path.join("test_files", "backup.pkl")))
-    print("An exception has occurred...Restarting main...")
+    try:
+        utils.save_data_to_csv(NEWEST_DICT)
+    except:
+        pickle.dump(NEWEST_DICT, os.path.abspath(os.path.join("test_files", "backup.pkl")))
+    
+    print("An error has occurred...Restarting main...")
     main()
+
+    
