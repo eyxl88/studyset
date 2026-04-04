@@ -609,7 +609,7 @@ def print_alpha_from_list(list):
 def get_dict_key_from_index(index, string_input, study_dict):
     term_index = int(string_input)
     validate_edit_term(index, term_index)
-    term = study_dict.keys()[term_index - 1]
+    term = list(study_dict.keys())[term_index - 1]
     return term
 
 def validate_edit_term(index, term_index):
@@ -626,42 +626,55 @@ def separate_string_from_int(string):
             term_index += char
         else:
             definition_char += char
-            
+
     return int(term_index), definition_char
 
-def delete_term_or_definition(study_dict, index):
+def find_definition_string(char, term, study_dict):
+    """
+    Finds the definition string for removal.
+
+    Parameters:
+        char (str): character from A onwards representing the definition
+        term (str): key in the study dictionary related to the definition to be found.
+        study_dict (dict[str: list[str]]): dictionary of key terms and definition lists
+    
+    Returns:
+        definition (str): the definition referenced by the character.
+    
+    """
+    definition_index = ord(char.upper()) - ord("A")
+    return study_dict[term][definition_index]
+
+def delete_term_or_definition(index, study_dict):
     
     user_input = input("Enter term or definition to be deleted in the following format:\n" \
                             "1 for term 1, 1A for term 1 definition A or q to exit this edit mode: ").strip().upper()
-            
-    while user_input != "q":
-        try:
-            # Remove entire term with all its definitions
-            if user_input.isdigit():
-                term = get_dict_key_from_index(index, user_input, study_dict)
-                del study_dict[term]
+    try:
+        # Remove entire term with all its definitions
+        if user_input.isdigit():
+            term = get_dict_key_from_index(index, user_input, study_dict)
+            del study_dict[term]
                                 
-            # Remove a specified definition from a specific term.
-            else:
-                term_index, definition_char = separate_string_from_int(user_input)
-                term = get_dict_key_from_index(index, term_index, study_dict)
-                definition_index = ord(definition_char.upper()) - ord("A")
-                study_dict[term].pop(definition_index)
-            
-            user_input = input("Enter term or definition to be deleted in the following format:\n" \
-                            "1 for term 1, 1A for term 1 definition A or q to exit this edit mode: ").strip().upper()
+        # Remove a specified definition from a specific term.
+        else:
+            term_index, definition_char = separate_string_from_int(user_input)
+            term = get_dict_key_from_index(index, term_index, study_dict)
+            definition_str = find_definition_string(definition_char, term, study_dict)
+            study_dict[term].remove(definition_str)
                                 
-        except:
-            input("Invalid input. Press any key to try again...")
-
-def modify_term(study_dict, index):
+    except:
+        input("Invalid input. Press any key to try again...")
+        user_input = input("Enter term or definition to be deleted in the following format:\n" \
+                            "1 for term 1, 1A for term 1 definition A or q to exit this edit mode:" ).strip()
+        
+def modify_term(index, study_dict):
     # Identify the term to be changed and the new wording.
     term_index = input("Enter the number of the term you would like to change\n"
                         "or enter 'q' to exit this edit mode: ")
     
     # Continue until user enters q to exit this mode.
     while term_index != "q":
-        try:
+        # try:
             # Find the definition, which must be added to the entry of the new term.
             old_term = get_dict_key_from_index(index, term_index, study_dict)
             definition = study_dict[old_term]
@@ -674,22 +687,21 @@ def modify_term(study_dict, index):
             term_index = input("Enter the number of the term you would like to change\n"
                                "or enter 'q' to flip to the next set of terms: ")
             
-        except:
-            print("Invalid term index. Please enter a valid number.")
+        # except:
+        #     print("Invalid term index. Please enter a valid number.")
 
 
-def modify_def(study_dict):
+def modify_def(index, study_dict):
     """Modifies a specific definition line for a certain term in the dictionary."""
     # Get user input / confirmation to proceed.
     raw_input = input("Enter the term number and definition letter to be changed (eg. 1A)\n"
                               "or enter 'q' to exit this edit mode: ")
     
     while raw_input != "q":
-        try:
+        # try:
             # Find term and definition index to be able to access the edited location.
             term_index, definition_char = separate_string_from_int(raw_input)
-            term_index = int(term_index)
-            key = study_dict.keys()[term_index]
+            key = get_dict_key_from_index(index, term_index, study_dict)
             definition_index = ord(definition_char.upper()) - ord("A")
 
             # Update this section of the definition
@@ -699,8 +711,10 @@ def modify_def(study_dict):
             raw_input = input("Enter the term number and definition letter to be changed (eg. 1A)\n"
                               "or enter 'q' to exit to another edit mode: ")
                             
-        except:
-            print("Invalid entry. Please try again.")
+        # except:
+        #     print("Invalid entry. Please try again.")
+        #     raw_input = input("Enter the term number and definition letter to be changed (eg. 1A)\n"
+        #                       "or enter 'q' to exit to another edit mode: ")
 
 
 def modify_study_set(study_dict):
@@ -728,13 +742,13 @@ def modify_study_set(study_dict):
                     return None 
                 
                 elif user_choice == "term":
-                    modify_term(study_dict)
+                    modify_term(index, study_dict)
                 
                 elif user_choice == "def":
-                    modify_def(study_dict)
+                    modify_def(index, study_dict)
 
                 elif user_choice == "del":
-                    delete_term_or_definition(study_dict)
+                    delete_term_or_definition(index, study_dict)
 
                 elif user_choice == "n":
                     should_continue = False
