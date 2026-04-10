@@ -129,30 +129,35 @@ def save_data_to_csv(entry_dict: dict[str, list[str]]):
     input("Your file has been saved. Press any key to contine...")
     return study_set_name, file_path
 
+def handle_read_data_from_csv(csv_to_read):
+    try:
+        dict_read_from_csv, study_set_name = read_data_from_csv(csv_to_read)
+
+    except:
+        print("File not found. Try again by pressing 'r' after the main menu prints." \
+              " Use a valid file name.")
+        pause_input()
+        return None, None
+    
+    return dict_read_from_csv, study_set_name
+
 def read_data_from_csv(csv_to_read):
     """Takes csv file and reads csv file into test-ready dictionary."""
     csv_to_read = os.path.abspath(csv_to_read)
     study_set_name = csv_to_read[:-4] # Remove .csv extension
     dict_read_from_csv = {}
     
-    try:
-        with open(csv_to_read, "r") as csv_to_read:
-            csv_reader = csv.reader(csv_to_read, delimiter=",")
+    with open(csv_to_read, "r") as csv_to_read:
+        csv_reader = csv.reader(csv_to_read, delimiter=",")
             
-            for row in csv_reader:
-                if not row:
-                    continue
+        for row in csv_reader:
+            if not row:
+                continue
                 
-                else:
-                    key = row[0]
-                    definition = row[1:]
-                    dict_read_from_csv[key] = definition
-
-    except:
-        print("File not found. Try again by pressing 'r' after the main menu prints." \
-              " Use a valid file name.")
-        pause_input()
-        dict_read_from_csv, study_set_name = None, None
+            else:
+                key = row[0]
+                definition = row[1:]
+                dict_read_from_csv[key] = definition
         
     return dict_read_from_csv, study_set_name
 
@@ -296,6 +301,7 @@ def print_menu(file_name = ""):
     print("Press 's' to save a created study set to a csv file.")
     print("Press 'e' to edit a study set you have loaded.")
     print("Press 'r' to read a study set from a csv file.")
+    print("Press 'merge' to merge study sets from csv files.")
     print("Enter 'pdf' to print a test to pdf from  study set.")
 
     print("Press 'exit' to quit.")
@@ -601,6 +607,48 @@ def ask_to_read_score():
 
 #================================ Dictionary Editing Functions =================================================
 
+def merge_dicts():
+    # Get list of dictionaries to merge
+    list_of_filenames = []
+    filename = input("Enter the filenames of the study sets you want to merge: ")
+    
+    while filename != "f":
+        filename = input("Enter the filenames of the study sets you want to merge or 'f' to stop: ")
+        list_of_filenames.append(filename.strip())
+    
+    while True:
+        try: 
+            # Begin by opening the first:
+            study_dict = read_data_from_csv(filename)
+            # Merge with the rest:
+            for i in range(1, len(list_of_filenames)):
+                new_dict = read_data_from_csv(list_of_filenames[i])
+
+                # Merge duplicate terms
+                for key in new_dict:
+                    if key in study_dict:
+                        new_dict[key].extend(study_dict[key])
+                        study_dict[key].extend(new_dict[key])
+                
+                study_dict.update(new_dict)
+            break
+        
+        except FileNotFoundError:
+            print(f"There was an issue with {list_of_filenames[i]}.")
+            user_input = input("Please enter the correct filename or 'f' to ignore this error and continue: ")
+            if user_input != "f":
+                list_of_filenames[i+1:i+1] = user_input.strip()
+            
+        # Ask user to save updated study set and get a name for it.
+        user_save = input("Would you like to save the updated dictionary? (y/n): ")
+        if user_save == "y":
+            study_set_name = save_data_to_csv(study_dict)
+        else:
+            study_set_name = input("Enter a temporary name for this study set: ")
+            
+    return study_dict, study_set_name
+    
+
 def print_alpha_from_list(list):
     for i in range(len(list)):
         print(chr(ord("A") + i), end = "")
@@ -674,7 +722,7 @@ def modify_term(index, study_dict):
     
     # Continue until user enters q to exit this mode.
     while term_index != "q":
-        # try:
+        try:
             # Find the definition, which must be added to the entry of the new term.
             old_term = get_dict_key_from_index(index, term_index, study_dict)
             definition = study_dict[old_term]
@@ -687,11 +735,44 @@ def modify_term(index, study_dict):
             term_index = input("Enter the number of the term you would like to change\n"
                                "or enter 'q' to flip to the next set of terms: ")
             
-        # except:
-        #     print("Invalid term index. Please enter a valid number.")
+        except:
+            print("Invalid term index. Please enter a valid number.")
+            term_index = input("Enter the number of the term you would like to change\n"
+                        "or enter 'q' to exit this edit mode: ")
 
-# Implement adding definitions
-# Implement reprinting of the terms available to edit (fixes the last delete bugs)
+
+def add_new_definition(index, study_dict):
+    key_index = input("Enter the number of the key you would like to add definitions to: ")
+    
+    while True:
+        # Allow user to exit definition adding edit mode.
+        if key_index == "q":
+            break
+        
+        try:
+            key = get_dict_key_from_index(index, key_index, study_dict)
+            
+            # Allows user to enter all related definitions for the key term.
+            definition_list = []
+            while True:
+                def_input = input("Input definition(s) of key term or 'f' to finish this term: ")
+                
+                if def_input == "f":
+                    break
+
+                definition_list.append(def_input)
+            
+            # Updates study set dictionary and allows user to enter next key terms.
+            study_dict[key].extend(definition_list)
+            print("Successfully updated...\n")
+            key_index = input("Enter the number of the key you would like to add definitions to\n"\
+                              "or enter 'q' to exit this edit mode: ")
+
+        except:
+            print("Invalid entry. Please try again.")
+            key = get_dict_key_from_index(index, key_index, study_dict)
+
+
 # Ensure all excepts have new input methods
 # Implement clearing
 # Implement mandatory saving
@@ -703,7 +784,7 @@ def modify_def(index, study_dict):
                               "or enter 'q' to exit this edit mode: ")
     
     while raw_input != "q":
-        # try:
+        try:
             # Find term and definition index to be able to access the edited location.
             term_index, definition_char = separate_string_from_int(raw_input)
             key = get_dict_key_from_index(index, term_index, study_dict)
@@ -715,12 +796,21 @@ def modify_def(index, study_dict):
 
             raw_input = input("Enter the term number and definition letter to be changed (eg. 1A)\n"
                               "or enter 'q' to exit to another edit mode: ")
+            print()
                             
-        # except:
-        #     print("Invalid entry. Please try again.")
-        #     raw_input = input("Enter the term number and definition letter to be changed (eg. 1A)\n"
-        #                       "or enter 'q' to exit to another edit mode: ")
+        except:
+            print("\nInvalid entry. Please try again.")
+            raw_input = input("Enter the term number and definition letter to be changed (eg. 1A)\n"
+                              "or enter 'q' to exit to another edit mode: ")
 
+
+def print_ten_terms(index, study_dict):
+    for i, key in enumerate(study_dict):
+        if index - 9 <= i <= index:
+            print(f"{i + 1}: {key}")
+            print_alpha_from_list(study_dict[key])
+            print("-" * 79)
+    print()
 
 def modify_study_set(study_dict):
     """Modifies study dict in place upon user's request."""
@@ -756,7 +846,10 @@ def modify_study_set(study_dict):
                     delete_term_or_definition(index, study_dict)
 
                 elif user_choice == "n":
-                    should_continue = False
+                    break
+
+                clear_console()
+                print_ten_terms()
         
             clear_console()
     

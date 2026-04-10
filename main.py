@@ -13,7 +13,7 @@ import pickle
 
 # Global Constants
 NEWEST_DICT: dict[Any, Any] = {}
-ACCEPTED_USER_INPUTS: list[str] = ['exit', 'c', 's', 'r', 'mcqdef', 
+ACCEPTED_USER_INPUTS: list[str] = ['exit', 'c', 's', 'r', 'merge', 'mcqdef', 
                         'mcqkey', 'selectall', 'e', 'pdf',
                         'w', 'm', 'fc', 'chr', 'readscore']
 
@@ -46,10 +46,13 @@ def main():
 
             elif user_input == 'r':
                 file_name = input("Input name of csv to read with extension: ")
-                NEWEST_DICT, study_set_name = utils.read_data_from_csv(file_name)
+                NEWEST_DICT, study_set_name = utils.handle_read_data_from_csv(file_name)
                 if NEWEST_DICT != None:
                     if len(NEWEST_DICT) != 0:
                         is_file_loaded = True
+            
+            elif user_input == "merge":
+                NEWEST_DICT, study_set_name = utils.merge_dicts()
 
             elif user_input == 'mcqdef' and check_file_loaded(is_file_loaded):
                 multiple_choice(NEWEST_DICT, study_set_name)
