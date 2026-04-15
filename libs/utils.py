@@ -112,9 +112,15 @@ def read_data_from_csv(csv_to_read):
                     definition = row[1:]
                     dict_read_from_csv[key] = definition
 
-    except:
+    except FileNotFoundError:
         print("File not found. Try again by pressing 'r' after the main menu prints." \
               " Use a valid file name.")
+        pause_input()
+        dict_read_from_csv, study_set_name = None, None
+
+    except:
+        print("An unexpected error ocurred when trying to upload the file."\
+              " If the error persists, use another csv file.")
         pause_input()
         dict_read_from_csv, study_set_name = None, None
         
