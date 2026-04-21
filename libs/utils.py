@@ -147,7 +147,7 @@ def read_data_from_csv(csv_to_read):
     study_set_name = csv_to_read[:-4] # Remove .csv extension
     dict_read_from_csv = {}
     
-    with open(csv_to_read, "r") as csv_to_read:
+    with open(csv_to_read, "r", encoding="utf") as csv_to_read:
         csv_reader = csv.reader(csv_to_read, delimiter=",")
             
         for row in csv_reader:
