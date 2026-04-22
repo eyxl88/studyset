@@ -144,7 +144,7 @@ def handle_read_data_from_csv(csv_to_read):
 def read_data_from_csv(csv_to_read):
     """Takes csv file and reads csv file into test-ready dictionary."""
     csv_to_read = os.path.abspath(csv_to_read)
-    study_set_name = csv_to_read[:-4] # Remove .csv extension
+    study_set_name = os.path.split(csv_to_read)[1][:-4] # Remove .csv extension
     dict_read_from_csv = {}
     
     with open(csv_to_read, "r", encoding="utf") as csv_to_read:
@@ -508,13 +508,13 @@ def save_score(study_set_name, section, score):
     now_formatted = now.strftime("%Y/%m/%d %H:%M")
     
     # Find / create filename for the scores file of this study mode.
-    section = study_set_name + "_" + section + "_scores.txt"
-    section = os.path.join("user_data", section)
-    section = os.path.abspath(section)
+    score_file_name = os.path.join("user_data", study_set_name + "_" + section + "_scores.txt")
+
+    score_file_name = os.path.abspath(score_file_name)
 
     # Create / open file and read contents to update (if any).
-    if os.path.exists(section):
-        with open(section, "r") as file:
+    if os.path.exists(score_file_name):
+        with open(score_file_name, "r") as file:
             list_of_contents = []
             
             for line in file.readlines():
@@ -526,7 +526,7 @@ def save_score(study_set_name, section, score):
             rewrite_list.append(create_score_attempt(now_formatted, score))
                 
             # Rewrite existing file contents
-            with open(section, "w") as file2:
+            with open(score_file_name, "w") as file2:
                 for item in rewrite_list:
                     file2.write(item)
                     
@@ -535,7 +535,7 @@ def save_score(study_set_name, section, score):
 
     # If the user score file for that section is empty:
     else:
-        with open(section, "w") as file:
+        with open(score_file_name, "w") as file:
             file.write(create_score_attempt(now_formatted, score))
             file.write(create_overall_score(score))
 
