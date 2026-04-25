@@ -314,7 +314,7 @@ def match_answers(study_dict, study_set_name, save=True):
         return user_score
 
 def match_answers_bounded(full_study_dict, study_set_name):
-    full_term_list = full_study_dict.keys()
+    full_term_list = list(full_study_dict.keys())
     full_length = len(full_term_list)
     user_score = 0
 
@@ -322,19 +322,21 @@ def match_answers_bounded(full_study_dict, study_set_name):
         
         # Create dictionary with selected 10 terms.
         bounded_dict = {}
-        for j in range(NUM_MATCH_QUESTIONS):
+        for j in range(min(NUM_MATCH_QUESTIONS, full_length - i)):
             index = i + j
             key = full_term_list[index]
             bounded_dict[key] = full_study_dict[key]
         
         # Ask questions
         user_subpoints = match_answers(bounded_dict, study_set_name, save=False)
+        utils.pause_input()
+        utils.clear_console()
 
         # Exit function if user wants to quit, or add to score
         if user_subpoints == "q":
             return 0
         else:
-            user_score += user_subpoints / 100 * NUM_MATCH_QUESTIONS
+            user_score += user_subpoints / 100 * min(NUM_MATCH_QUESTIONS, full_length - i)
         
     # Convert user score to percentage and 
     user_score *= 100

@@ -104,18 +104,18 @@ def main():
 
 
 # Initialize the program
-try:
-    main()
+# try:
+main()
 
-except:
-    try:
-        print("An unpreventable error has occured. Emergency saving activated...")
-        utils.save_data_to_csv(NEWEST_DICT)
-    except:
-        with open(os.path.abspath(os.path.join("test_files", "backup.pkl")), "w") as f1:
-            pickle.dump(NEWEST_DICT, f1)
+# except:
+#     try:
+#         print("An unpreventable error has occured. Emergency saving activated...")
+#         utils.save_data_to_csv(NEWEST_DICT)
+#     except:
+#         with open(os.path.abspath(os.path.join("test_files", "backup.pkl")), "w") as f1:
+#             pickle.dump(NEWEST_DICT, f1)
     
-    print("An error has occurred...Restarting main...")
-    main()
+#     print("An error has occurred...Restarting main...")
+#     main()
 
     

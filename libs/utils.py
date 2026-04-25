@@ -291,6 +291,7 @@ def print_menu(file_name = ""):
     print("Press 'selectall' to be quizzed with Select All questions (definitions as answers).")
     print("Press 'w' to be quizzed by writing the key term corresponding to the definition.")
     print("Press 'm' to be quizzed by matching key terms to definitions.")
+    print("Press 'm2' to be quizzed by matching key terms to definitions in sets of 10.")
     print("Press 'fc' for flashcard mode of studying.")
     print("Press 'chr' to be quizzed with ordering questions on key terms.")
     print("Press 'readscore' to see your saved scores.")
@@ -548,6 +549,9 @@ def read_score(study_set_name, study_mode):
 
     try:
         filepath = study_set_name + "_" + study_mode + "_scores.txt"
+        print()
+        print("_" * 79)
+        print(f"Scores from {study_mode} mode:")
         filepath = os.path.join("user_data", filepath)
         filepath = os.path.abspath(filepath)
         
@@ -555,6 +559,7 @@ def read_score(study_set_name, study_mode):
             contents = score_file.readlines()
             for line in contents:
                 print(line, end="")
+        print("_" * 79, "\n")
 
     except:
         input("File not found. Press any key to return to the score reading menu.")
