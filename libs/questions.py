@@ -5,6 +5,8 @@ import libs.chronological as chrono
 
 # All quizzes, flashcard logic found in here.
 
+NUM_MATCH_QUESTIONS = 10
+
 def create_options(answer: str, option_view_object):
     """
     Randomly chooses MCQ answers from a list and returns dictionary of options \
@@ -262,7 +264,7 @@ def write_mode(study_dict, study_set_name):
 
 # ==================================== Match ====================================
 
-def match_answers(study_dict, study_set_name):
+def match_answers(study_dict, study_set_name, save=True):
     """
     Manages the matching terms quiz version of any given study set.
     
@@ -272,6 +274,7 @@ def match_answers(study_dict, study_set_name):
     
     Returns:
         None
+        user_score (float): user score out of 100 if save = False
     
     """
     # Set up Question
@@ -292,7 +295,7 @@ def match_answers(study_dict, study_set_name):
     while True:
         user_input = input("Enter the matches in any order in the form 1B,2A,3D,4C: ")
         if user_input == "q":
-            return 0
+            return "q"
 
         # Calculate, print, and save score.
         try:
@@ -304,8 +307,40 @@ def match_answers(study_dict, study_set_name):
             print("Invalid input. Try again or enter q to exit.")
     
     # Prints and saves user overall score
+    if save:
+        print(f"You scored {user_score:.2f}%!")
+        utils.ask_to_save_score(study_set_name, "match", user_score)
+    else:
+        return user_score
+
+def match_answers_bounded(full_study_dict, study_set_name):
+    full_term_list = full_study_dict.keys()
+    full_length = len(full_term_list)
+    user_score = 0
+
+    for i in range(0, full_length, NUM_MATCH_QUESTIONS):
+        
+        # Create dictionary with selected 10 terms.
+        bounded_dict = {}
+        for j in range(NUM_MATCH_QUESTIONS):
+            index = i + j
+            key = full_term_list[index]
+            bounded_dict[key] = full_study_dict[key]
+        
+        # Ask questions
+        user_subpoints = match_answers(bounded_dict, study_set_name, save=False)
+
+        # Exit function if user wants to quit, or add to score
+        if user_subpoints == "q":
+            return 0
+        else:
+            user_score += user_subpoints / 100 * NUM_MATCH_QUESTIONS
+        
+    # Convert user score to percentage and 
+    user_score *= 100
     print(f"You scored {user_score:.2f}%!")
     utils.ask_to_save_score(study_set_name, "match", user_score)
+
 
 # ==================================== Select ====================================
 

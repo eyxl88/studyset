@@ -1,7 +1,7 @@
 from typing import Any
 import libs.utils as utils
 from libs.chronological import chronological
-from libs.questions import multiple_choice, multiple_choice_flipped, flashcard, write_mode, match_answers, select_all
+from libs.questions import multiple_choice, multiple_choice_flipped, flashcard, write_mode, match_answers, select_all, match_answers_bounded
 from libs.utils import check_file_loaded
 from libs.exporttest import initialize_pdf
 import os
@@ -15,7 +15,7 @@ import pickle
 NEWEST_DICT: dict[Any, Any] = {}
 ACCEPTED_USER_INPUTS: list[str] = ['exit', 'c', 's', 'r', 'merge', 'mcqdef', 
                         'mcqkey', 'selectall', 'e', 'pdf',
-                        'w', 'm', 'fc', 'chr', 'readscore']
+                        'w', 'm', 'm2', 'fc', 'chr', 'readscore']
 
 # Main program loop
 def main():
@@ -68,6 +68,9 @@ def main():
 
             elif user_input == "m" and check_file_loaded(is_file_loaded):
                 match_answers(NEWEST_DICT, study_set_name)
+        
+            elif user_input == "m2" and check_file_loaded(is_file_loaded):
+                match_answers_bounded(NEWEST_DICT, study_set_name)
 
             elif user_input == "fc" and check_file_loaded(is_file_loaded):
                 flashcard(NEWEST_DICT)
