@@ -16,14 +16,23 @@ LETTER_COLORS = {
 }
 
 def write_words_from_options_dict(options_dict):
-    """Prints each key and one-line phrase definition from a given dictionary."""
+    """Returns each key and one-line phrase definition from a given dictionary."""
     test_options = ""
     for key in options_dict:
         test_options += f"    {key}: {options_dict[key]}\n"
     return test_options
 
+def write_sentences_from_options_dict(options_dict):
+    """Returns each key and multiline phrases definition from a given dictionary."""
+    test_options = ""
+    for key in options_dict:
+        test_options += f"    {key}: "
+        test_options += "\n         ".join(options_dict[key])
+        test_options += "\n"
+    return test_options
+
 def get_options_list(answer, study_dict_object):
-    """Creates options list with 4 incorrect options and the given answer."""
+    """Returns options list with 4 incorrect options and the given answer."""
     options_list = [answer]
     incorrect_options = list(study_dict_object)
     incorrect_options.remove(answer)
@@ -35,6 +44,7 @@ def get_options_list(answer, study_dict_object):
     
     random.shuffle(options_list)
     return options_list
+
 
 def mcqkey_test(study_dict):
     """
@@ -83,6 +93,51 @@ def mcqkey_test(study_dict):
     return test_lines, answer_key
 
 
+def mcqdef_test(study_dict):
+    """
+    Creates multiple choice questions where the definition is the answer.
+    
+    Parameter:
+        study_dict (dict[str, list[str]]): study set containing key terms and definitions.
+    
+    Returns:
+        test_lines (str): string containing all lines of test questions and answers
+        answer_key (list [list[str]]): list containing lists of answer key lines
+    
+    """
+    # Creates list of potential questions from key terms of study set.
+    list_of_keys = list(study_dict.keys())
+    test_lines = ""
+    answer_key = []
+    
+    for i in range(len(study_dict)):
+
+        # Set question key term and remove from list of potential terms.
+        key_term = random.choice(list_of_keys)
+        list_of_keys.remove(key_term)
+
+        # Write question and answer for the term
+        test_lines += f"Question {i + 1} out of {len(study_dict)} - {key_term} \n"
+        answer_key_row = [i + 1]
+
+        # Finds the correct answer, and sets up potential answers
+        answer = study_dict[key_term]
+        options_list = get_options_list(answer, study_dict.values())
+        options_dict = chrono.create_chronological(options_list)
+
+        # Write into test lines
+        test_lines += write_sentences_from_options_dict(options_dict)
+        test_lines += "_" * 79 + "\n"
+
+        # Write into answer key lines.
+        answer_letter = utils.get_dict_key(options_dict, answer)
+        answer_key_row.append(answer_letter)
+        answer_key_row.append("\n".join(answer))
+        answer_key.append(answer_key_row)
+    
+    return test_lines, answer_key
+
+
 def create_pdf(file_path, text_lines):
     """
     Creates a PDF file with the given text lines.
@@ -109,7 +164,7 @@ def create_pdf(file_path, text_lines):
                 c.setFont("Helvetica-Bold", 12)
                 c.drawString(50, y_position, line)
             
-            elif "A:" in line or "B:" in line or "C:" in line or "D:" in line or "E:" in line:
+            elif "A:" in line or "B:" in line or "C:" in line or "D:" in line or "E:" in line or line.startswith("    "):
                 c.setFont("Helvetica", 10)
                 c.drawString(50, y_position, line)
 
@@ -241,7 +296,7 @@ def manage_single_question(study_dict):
     question_call = get_question_type()
                
     if question_call == "mcqdef":
-        pass
+        create_test(study_dict, mcqdef_test)
 
     elif question_call == "mcqkey":
         create_test(study_dict, mcqkey_test)
