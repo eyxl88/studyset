@@ -138,6 +138,101 @@ def mcqdef_test(study_dict):
     return test_lines, answer_key
 
 
+# ============================ Move to Utils ===================================================
+def get_dict_keys_list(options_dict, values_list):
+    """
+    Finds the list of keys corresponding to a list of values in a dictionary.
+    
+    Parameters:
+        options_dict (dict[str: list[str]]): dictionary with keys and values to be
+        searched.
+        values_list (list[str]): list of selected values from the dictionary
+
+    Returns:
+        dict_keys_list (list[str]): list of keys corresponding to selected values.
+    """
+    dict_keys_list = []
+    for value in values_list:
+        key = utils.get_dict_key(options_dict, value)
+        dict_keys_list.append(key)
+
+    return dict_keys_list
+
+def get_select_options_list(answer_list, dict_object):
+    study_dict_choices = list(dict_object)
+    study_dict_choices.remove(answer_list)
+    
+    select_all_choices = []
+    number_of_choices = random.randint(-2, 4) + 6
+
+    # Flatten 2D study dict values list.
+    for list in study_dict_choices:
+        for item in list:
+            select_all_choices.append(item)
+
+    # Select questions for user
+    random.shuffle(select_all_choices)
+    select_all_choices = select_all_choices[:number_of_choices]
+
+    # Add back correct answer
+    select_all_choices.extend(answer_list)
+    random.shuffle(select_all_choices)
+    return select_all_choices
+
+def selectall_test(study_dict):
+    """
+    Creates a full set of randomized selectall questions and the answer key.
+    
+    Parameters:
+        study_dict (dict[str, list[str]]): dictionary containing key terms and definitions as values.
+    
+    Returns:
+        test_lines (str): a string containing all test questions and options, formatted.
+        answer_key (str): the correct answers to each question.
+    """
+    list_of_keys = list(study_dict.keys())
+    list_of_values = [defi for def_list in list(study_dict.values()) for defi in def_list]
+    test_lines = ""
+    answer_key = []
+
+    for i in range(len(study_dict)):
+
+        # Create question and remove from list.
+        question = random.choice(list_of_keys)
+        list_of_keys.remove(question)
+        
+        # Add question and options to test material.
+        test_lines += f"Question {i + 1} out of {len(study_dict)}:\n"
+        answer_key_row = [i + 1]
+        test_lines += question
+        
+        # Set up answer and options.
+        answer_list = study_dict[question]
+        
+        options_list = get_select_options_list(answer_list, study_dict.keys())
+        options_dict = chrono.create_chronological(options_list)
+
+        # Write into test lines
+        test_lines += write_words_from_options_dict(options_dict)
+        test_lines += "_" * 79 + "\n"
+
+        # Write into answer key lines.
+        answer_letters = get_dict_keys_list(options_dict, answer_list)
+       
+        for i in range(len(answer_letters)):
+
+            # Create empty first box for subsequent rows of same question's answer key.
+            if i > 0:
+                answer_key_row = [""]
+            
+            answer_key_row.append(answer_letters[i])
+            answer_key_row.append(answer_list[i])
+
+        answer_key.append(answer_key_row)
+    
+    return test_lines, answer_key
+
+
 def create_pdf(file_path, text_lines):
     """
     Creates a PDF file with the given text lines.
@@ -303,10 +398,13 @@ def manage_single_question(study_dict):
 
     elif question_call == "m":
         pass
+
     elif question_call == "w":
         pass
+    
     elif question_call == "selectall":
-        pass
+        create_test(study_dict, selectall_test)
+
     elif question_call == "chr":
         pass
 
