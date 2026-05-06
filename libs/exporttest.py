@@ -159,7 +159,7 @@ def get_dict_keys_list(options_dict, values_list):
     return dict_keys_list
 
 def get_select_options_list(answer_list, dict_object):
-    study_dict_choices = list(dict_object)
+    study_dict_choices =dict_object
     study_dict_choices.remove(answer_list)
     
     select_all_choices = []
@@ -191,7 +191,6 @@ def selectall_test(study_dict):
         answer_key (str): the correct answers to each question.
     """
     list_of_keys = list(study_dict.keys())
-    list_of_values = [defi for def_list in list(study_dict.values()) for defi in def_list]
     test_lines = ""
     answer_key = []
 
@@ -204,12 +203,12 @@ def selectall_test(study_dict):
         # Add question and options to test material.
         test_lines += f"Question {i + 1} out of {len(study_dict)}:\n"
         answer_key_row = [i + 1]
-        test_lines += question
+        test_lines += f"{question}\n"
         
         # Set up answer and options.
         answer_list = study_dict[question]
         
-        options_list = get_select_options_list(answer_list, study_dict.keys())
+        options_list = get_select_options_list(answer_list, list(study_dict.values()))
         options_dict = chrono.create_chronological(options_list)
 
         # Write into test lines
@@ -219,14 +218,14 @@ def selectall_test(study_dict):
         # Write into answer key lines.
         answer_letters = get_dict_keys_list(options_dict, answer_list)
        
-        for i in range(len(answer_letters)):
+        for j in range(len(answer_letters)):
 
             # Create empty first box for subsequent rows of same question's answer key.
-            if i > 0:
+            if j > 0:
                 answer_key_row = [""]
             
-            answer_key_row.append(answer_letters[i])
-            answer_key_row.append(answer_list[i])
+            answer_key_row.append(answer_letters[j])
+            answer_key_row.append(answer_list[j])
 
         answer_key.append(answer_key_row)
     
@@ -401,7 +400,7 @@ def manage_single_question(study_dict):
 
     elif question_call == "w":
         pass
-    
+
     elif question_call == "selectall":
         create_test(study_dict, selectall_test)
 
