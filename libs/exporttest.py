@@ -222,7 +222,7 @@ def selectall_test(study_dict):
 
             # Create empty first box for subsequent rows of same question's answer key.
             if j > 0:
-                answer_key_row = [""]
+                answer_key_row = ["XXX"]
             
             answer_key_row.append(answer_letters[j])
             answer_key_row.append(answer_list[j])
