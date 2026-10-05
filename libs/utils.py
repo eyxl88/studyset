@@ -2,6 +2,7 @@ import os, platform, csv, random
 import libs.chronological as chrono
 import libs.check_question as check
 from datetime import datetime
+import pickle
 
 # Bunch of helper functions and stuff I couldn't find the place to actually
 # sort them into. Very messy, I know :)
@@ -908,3 +909,12 @@ def manage_latexify(string):
     latexify(string_list)
     formatted_string = " ".join(string_list)
     return formatted_string
+
+# ============ PICKLE ===================
+def read_pickle(filename):
+    with open(filename, "rb") as f:
+        return pickle.load(f)
+
+def dump_pickle(filename, data):
+    with open(filename, "wb") as f:
+        return pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
